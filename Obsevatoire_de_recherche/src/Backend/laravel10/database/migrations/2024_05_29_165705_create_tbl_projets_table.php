@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('titre_projet')->unique();
             $table->text('descript_projet');
             $table->text('superviseurs');
-            $table->foreignIdFor(TblNiveau::class)->constrained();
+            $table->unsignedBigInteger('tbl_niveau_id');
+            $table->foreign('tbl_niveau_id')->references('id')->on('tbl_niveaux')->onDelete('cascade');
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(TblCategorie::class)->constrained();
             $table->timestamps();

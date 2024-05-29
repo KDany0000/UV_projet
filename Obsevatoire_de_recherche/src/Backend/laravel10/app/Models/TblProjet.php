@@ -19,7 +19,7 @@ class TblProjet extends Model
         'descript_projet',
         'superviseurs',
         'tbl_niveau_id',
-        'tbl_categorie',
+        'tbl_categorie_id',
         'user_id',
     ];
 
