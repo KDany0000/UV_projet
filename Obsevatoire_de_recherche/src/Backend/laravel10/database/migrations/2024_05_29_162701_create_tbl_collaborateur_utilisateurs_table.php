@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Collaborateur;
 use App\Models\TblCollaborateur;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
