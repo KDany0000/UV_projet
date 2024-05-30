@@ -19,9 +19,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'nom_user',
-        'email_user',
+        'email',
         'tel_user',
-        'filiere_id',
+        'tbl_filiere_id',
+        'password',
     ];
 
     public function filiere()
@@ -51,7 +52,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'mot_de_passe',
+        'password',
         'remember_token',
     ];
 
@@ -62,5 +63,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 }

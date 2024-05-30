@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('nom_user');
-            $table->string('email_user')->unique();
+            $table->string('email')->unique();
             $table->string('tel_user')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignIdFor(TblFiliere::class)->constrained();
-            $table->string('mot_de_passe');
+            $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
