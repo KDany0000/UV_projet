@@ -21,6 +21,11 @@ class TblUniversite extends Model
         'boite_postale',
     ];
 
+    public function facultes()
+    {
+        return $this->hasMany(TblFaculte::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

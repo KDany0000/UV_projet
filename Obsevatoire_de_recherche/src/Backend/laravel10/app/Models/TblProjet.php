@@ -23,6 +23,31 @@ class TblProjet extends Model
         'user_id',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function niveau()
+    {
+        return $this->belongsTo(TblNiveau::class);
+    }
+
+    public function categorie()
+    {
+        return $this->belongsTo(TblCategorie::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(TblDocument::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'collaborateur_projet');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -20,6 +20,17 @@ class TblFaculte extends Model
         'tbl_universite_id',
     ];
 
+    public function universite()
+    {
+        return $this->belongsTo(TblUniversite::class);
+    }
+
+    public function filieres()
+    {
+        return $this->hasMany(TblFiliere::class);
+    }
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

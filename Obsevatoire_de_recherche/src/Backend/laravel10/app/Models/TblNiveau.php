@@ -18,6 +18,11 @@ class TblNiveau extends Model
         'code_niv',
     ];
 
+    public function projets()
+    {
+        return $this->hasMany(TblProjet::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

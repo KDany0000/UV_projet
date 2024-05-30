@@ -18,6 +18,15 @@ class TblCollaborateur extends Model
         'nom_collab',
         'email_collab',
     ];
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'collaborateur_utilisateur');
+    }
+
+    public function projets()
+    {
+        return $this->belongsToMany(User::class, 'collaborateur_projet');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
