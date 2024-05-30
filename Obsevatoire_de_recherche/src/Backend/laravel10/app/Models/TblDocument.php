@@ -23,6 +23,17 @@ class TblDocument extends Model
         'tbl_projet_id',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function projet()
+    {
+        return $this->belongsTo(TblProjet::class);
+    }
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

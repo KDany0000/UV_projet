@@ -24,6 +24,27 @@ class User extends Authenticatable
         'filiere_id',
     ];
 
+    public function filiere()
+    {
+        return $this->belongsTo(TblFiliere::class);
+    }
+
+    public function projets()
+    {
+        return $this->hasMany(TblProjet::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(TblDocument::class);
+    }
+
+    public function collaborateurs()
+    {
+        return $this->belongsToMany(TblCollaborateur::class, 'collaborateur_utilisateur');
+    }
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -19,6 +19,11 @@ class TblCategorie extends Model
         'descript_cat',
     ];
 
+    public function projets()
+    {
+        return $this->hasMany(TblProjet::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
