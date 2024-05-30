@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Ressources\TblUniversiteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Usecases\Authcontroller;
@@ -29,6 +30,14 @@ Route::group(['middleware' => ['auth:sanctum']] , function(){
 
 Route::prefix('ressources')->group(function () {
     //toutes les routes des ressources
+
+    Route::prefix('universite')->controller(TblUniversiteController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
 
 
 });

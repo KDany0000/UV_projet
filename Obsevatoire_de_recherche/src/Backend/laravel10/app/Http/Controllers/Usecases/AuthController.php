@@ -22,7 +22,7 @@ class Authcontroller extends Controller
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8',
             'tel_user' => 'required|string|min:9|unique:users,email',
-            'tbl_filiere_id' => 'nullable'
+            //'tbl_filiere_id' => 'nullable'
         ]);
 
         if ($validator->fails()) {
@@ -33,7 +33,7 @@ class Authcontroller extends Controller
             'nom_user' => $request->nom_user,
             'email' => $request->email,
             'tel_user' => $request->tel_user,
-            'tbl_filiere_id' => $request->tbl_filiere_id,
+            //'tbl_filiere_id' => $request->tbl_filiere_id,
             'password' => $request->password,
         ]);
 

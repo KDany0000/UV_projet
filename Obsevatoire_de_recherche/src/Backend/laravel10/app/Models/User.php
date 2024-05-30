@@ -21,7 +21,7 @@ class User extends Authenticatable
         'nom_user',
         'email',
         'tel_user',
-        'tbl_filiere_id',
+        //'tbl_filiere_id',
         'password',
     ];
 
