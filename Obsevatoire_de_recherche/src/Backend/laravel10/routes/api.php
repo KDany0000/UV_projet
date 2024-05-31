@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Ressources\TblCollaborateurController;
 use App\Http\Controllers\Ressources\TblUniversiteController;
+use App\Http\Controllers\Ressources\TblFaculteController;
+use App\Http\Controllers\Ressources\TblFiliereController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Usecases\Authcontroller;
@@ -31,7 +34,31 @@ Route::group(['middleware' => ['auth:sanctum']] , function(){
 Route::prefix('ressources')->group(function () {
     //toutes les routes des ressources
 
-    Route::prefix('universite')->controller(TblUniversiteController::class)->group(function () {
+    Route::prefix('universites')->controller(TblUniversiteController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
+
+     Route::prefix('facultes')->controller(TblFaculteController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
+
+     Route::prefix('filieres')->controller(TblFiliereController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
+
+     Route::prefix('collaborateur')->controller(TblCollaborateurController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
         Route::post('/', 'store');
