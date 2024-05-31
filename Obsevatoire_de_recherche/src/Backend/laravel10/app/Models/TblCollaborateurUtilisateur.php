@@ -19,6 +19,8 @@ class TblCollaborateurUtilisateur extends Model
         'tbl_collaborateur_id',
     ];
 
+   
+
     /**
      * The attributes that should be hidden for serialization.
      *

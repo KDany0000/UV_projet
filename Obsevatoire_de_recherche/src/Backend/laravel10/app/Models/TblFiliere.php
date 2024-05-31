@@ -19,6 +19,16 @@ class TblFiliere extends Model
         'tbl_faculte_id',
     ];
 
+    public function faculte()
+    {
+        return $this->belongsTo(TblFaculte::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -19,10 +19,32 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'nom_user',
-        'email_user',
+        'email',
         'tel_user',
-        'filiere_id',
+        //'tbl_filiere_id',
+        'password',
     ];
+
+    public function filiere()
+    {
+        return $this->belongsTo(TblFiliere::class);
+    }
+
+    public function projets()
+    {
+        return $this->hasMany(TblProjet::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(TblDocument::class);
+    }
+
+    public function collaborateurs()
+    {
+        return $this->belongsToMany(TblCollaborateur::class, 'collaborateur_utilisateur');
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -30,7 +52,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'mot_de_passe',
+        'password',
         'remember_token',
     ];
 
@@ -41,5 +63,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 }
