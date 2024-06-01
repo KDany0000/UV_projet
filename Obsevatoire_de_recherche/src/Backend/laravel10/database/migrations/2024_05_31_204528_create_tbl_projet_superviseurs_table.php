@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\TblCollaborateur;
+use App\Models\TblProjet;
+use App\Models\TblSuperviseur;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,12 +14,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tbl_documents', function (Blueprint $table) {
+        Schema::create('tbl_projet_superviseurs', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_doc');
-            $table->string('lien_doc')->unique();
-            $table->string('type_doc');
-            $table->text('resume');
+            $table->foreignIdFor(TblSuperviseur::class)->constrained();
+            $table->foreignIdFor(TblProjet::class)->constrained();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tbl_documents');
+        Schema::dropIfExists('tbl_projet_superviseurs');
     }
 };

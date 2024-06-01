@@ -25,7 +25,7 @@ class TblCollaborateur extends Model
 
     public function projets()
     {
-        return $this->belongsToMany(User::class, 'collaborateur_projet');
+        return $this->belongsToMany(TblProjet::class, 'collaborateur_projet');
     }
 
     /**

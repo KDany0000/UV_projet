@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->belongsToMany(TblCollaborateur::class, 'collaborateur_utilisateur');
     }
 
+    public function superviseurss()
+    {
+        return $this->belongsToMany(TblSuperviseur::class, 'superviseur_utilisateur');
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

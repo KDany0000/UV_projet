@@ -45,7 +45,17 @@ class TblProjet extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'collaborateur_projet');
+        return $this->belongsToMany(User::class, 'collaborateur_projets');
+    }
+
+    public function superviseurs()
+    {
+        return $this->belongsToMany(TblSuperviseur::class, 'projet_superviseurs');
+    }
+
+    public function collaborateurs()
+    {
+        return $this->belongsToMany(TblCollaborateur::class, 'collaborateur_projets');
     }
 
     /**
