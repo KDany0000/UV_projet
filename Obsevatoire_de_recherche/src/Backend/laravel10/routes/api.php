@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\Ressources\TblCategorieController;
 use App\Http\Controllers\Ressources\TblCollaborateurController;
+use App\Http\Controllers\Ressources\TblDocumentController;
 use App\Http\Controllers\Ressources\TblUniversiteController;
 use App\Http\Controllers\Ressources\TblFaculteController;
 use App\Http\Controllers\Ressources\TblFiliereController;
+use App\Http\Controllers\Ressources\TblNiveauController;
+use App\Http\Controllers\Ressources\TblProjetController;
+use App\Http\Controllers\Ressources\TblSuperviseurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Usecases\Authcontroller;
@@ -58,13 +63,55 @@ Route::prefix('ressources')->group(function () {
         Route::delete('/{id}', 'destroy');
      });
 
-     Route::prefix('collaborateur')->controller(TblCollaborateurController::class)->group(function () {
+     Route::prefix('collaborateurs')->controller(TblCollaborateurController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
         Route::post('/', 'store');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
      });
+
+     Route::prefix('superviseurs')->controller(TblSuperviseurController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
+
+     Route::prefix('niveaux')->controller(TblNiveauController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
+
+     Route::prefix('categories')->controller(TblCategorieController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
+
+     Route::prefix('projets')->controller(TblProjetController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
+
+     Route::prefix('documents')->controller(TblDocumentController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+     });
+
+
 
 
 });
