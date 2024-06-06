@@ -120,9 +120,9 @@ Route::prefix('usecases')->group(function () {
     //toutes les routes des usecases
 
     Route::prefix('auth')->controller(Authcontroller::class)->group(function(){
-        Route::post('inscription' , 'inscription');
+        Route::post('/inscription' , 'inscription');
         Route::post('connexion' ,  'connexion');
         Route::post('verification' ,  'verifyConfirmationCode');
-        });
+    });
 
 });

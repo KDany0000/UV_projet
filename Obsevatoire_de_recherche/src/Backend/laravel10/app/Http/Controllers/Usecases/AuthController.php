@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Usecases;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserVerify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmationCodeMail;
 use App\Utils\ErrorManager;
 use Exception;
+use Illuminate\Support\Str;
 class Authcontroller extends Controller
 {
     //methode d'inscription
@@ -28,16 +30,33 @@ class Authcontroller extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
+        try{
+            $user = User::create([
+                'nom_user' => $request->nom_user,
+                'email' => $request->email,
+                'tel_user' => $request->tel_user,
+                'tbl_filiere_id' => $request->tbl_filiere_id,
+                'password' => $request->password,
+            ]);
 
-        $user = User::create([
-            'nom_user' => $request->nom_user,
-            'email' => $request->email,
-            'tel_user' => $request->tel_user,
-            'tbl_filiere_id' => $request->tbl_filiere_id,
-            'password' => $request->password,
-        ]);
+            $token = Str::random(64);
 
-        return response()->json($user, 201);
+            UserVerify::create([
+                'user_id' => $user->id,
+                'token' => $token
+            ]);
+
+            Mail::send('emails.confirmation_code_plain', ['token' => $token], function($message) use($request){
+            $message->to($request->email);
+            $message->subject('Email Verification Mail');
+            });
+            return response()->json($user, 201);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
 
@@ -83,4 +102,23 @@ class Authcontroller extends Controller
             return response()->json(['message' => 'Aucun utilisateur connecte'], 500);
         }
     }
+
+    public function verifyAccount($token)
+    {
+        $verifyUser = UserVerify::where('token', $token)->first();
+
+        if(!is_null($verifyUser) ){
+
+            $user = $verifyUser->user;
+            if(is_null($user->email_verified_at)) {
+                $verifyUser->user->email_verified_at = now();
+                $verifyUser->user->save();
+                $message = "Your e-mail is verified. You can now login";
+            } else {
+                $message = "Your e-mail is already verified. You can now login";
+            }
+            return view('confirmation_message',compact('message'));
+        }
+    }
+
 }
