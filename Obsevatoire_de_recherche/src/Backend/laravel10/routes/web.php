@@ -14,9 +14,9 @@ use App\Http\Controllers\Usecases\Authcontroller;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 
 Route::get('user/verify/{token}', [Authcontroller::class, 'verifyAccount'])->name('user.verify');

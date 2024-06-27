@@ -121,4 +121,48 @@ class Authcontroller extends Controller
         }
     }
 
+    // Méthode pour envoyer le code de vérification par e-mail
+    public function sendVerificationCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $verificationCode = Str::random(6); // Générer un code de vérification de 6 caractères
+
+        // Enregistrez le code de vérification dans la session de l'utilisateur
+        $request->session()->put('verification_code', $verificationCode);
+
+        // Envoyer l'e-mail avec le code de vérification
+        Mail::raw("Votre code de vérification est : $verificationCode", function ($message) use ($request) {
+            $message->to($request->email)->subject('Code de vérification');
+        });
+
+        return response()->json(['message' => 'Code de vérification envoyé par e-mail']);
+    }
+
+    // Méthode pour vérifier le code de vérification
+    public function verify(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required|string|min:6|max:6',
+        ]);
+
+        // Récupérez le code de vérification de la session de l'utilisateur
+        $verificationCode = $request->session()->get('verification_code');
+
+        if (!$verificationCode) {
+            return response()->json(['message' => 'Code de vérification expiré ou non trouvé'], 404);
+        }
+
+        // Comparez le code soumis par l'utilisateur avec celui stocké en session
+        if ($request->code !== $verificationCode) {
+            return response()->json(['message' => 'Code de vérification incorrect'], 400);
+        }
+
+        return response()->json(['message' => 'Adresse e-mail vérifiée avec succès']);
+    }
+
+
 }
