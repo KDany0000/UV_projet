@@ -33,7 +33,7 @@ class GestionMotDePasseController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
-            'token' => 'required', // Ajouter la validation du token
+            'token' => 'required',
         ]);
 
         $status = Password::reset(
