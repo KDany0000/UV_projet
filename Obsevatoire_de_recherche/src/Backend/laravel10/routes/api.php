@@ -12,6 +12,8 @@ use App\Http\Controllers\Ressources\TblSuperviseurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Usecases\Authcontroller;
+use App\Http\Controllers\Usecases\FileUploadController;
+use App\Http\Controllers\Usecases\GestionMotDePasseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,7 +124,20 @@ Route::prefix('usecases')->group(function () {
     Route::prefix('auth')->controller(Authcontroller::class)->group(function(){
         Route::post('inscription' , 'inscription');
         Route::post('connexion' ,  'connexion');
-        Route::post('verification' ,  'verifyConfirmationCode');
-        });
+        Route::post('verification' ,  'sendVerificationCode')->middleware('web');
+        Route::post('verify' ,  'verify')->middleware('web');
+    });
+
+    Route::prefix('password')->controller(GestionMotDePasseController::class)->group(function(){
+        Route::post('sendEmailReset' , 'sendResetLinkEmail');
+        Route::post('resetPassword' , 'resetPassword');
+    });
+
+    Route::prefix('upload')->controller(FileUploadController::class)->group(function(){
+        Route::post('/' , 'uploadFile');
+        Route::post('/delete' , 'deleteFile');
+
+
+    });
 
 });
