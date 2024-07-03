@@ -13,7 +13,7 @@ class ProjetSeeder extends Seeder
      */
     public function run(): void
     {
-        TblProjet::create([
+       TblProjet::create([
             'titre_projet'=>'Gestion De Projets D etudiant',
             'descript_projet' => 'ce projet vise a donner un moyen aux etudiants de l universiter de Dschang de pouvoir soumettre leurs projet dans une plateforme dedie a cela',
             'user_id'=>'1',
@@ -29,4 +29,6 @@ class ProjetSeeder extends Seeder
             'tbl_categorie_id'=>'1',
         ]);
     }
+
+
 }

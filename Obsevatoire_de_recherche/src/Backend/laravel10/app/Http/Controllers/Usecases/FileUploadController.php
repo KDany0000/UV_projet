@@ -17,7 +17,6 @@ class FileUploadController extends Controller
         ]);
 
 
-
         // Récupérer le fichier et le chemin
         $file = $request->file('file');
         $path = 'public/' . $request->input('path');

@@ -18,45 +18,82 @@ class Authcontroller extends Controller
     //methode d'inscription
 
     public function inscription(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'nom_user' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email|max:255',
+        'password' => 'required|string|min:8',
+        'tel_user' => 'required|string|min:9|unique:users,tel_user',
+        'tbl_filiere_id' => 'required|exists:tbl_filieres,id'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
+    }
+
+    // Enregistrez les informations de l'utilisateur dans la session avant la vérification de l'e-mail
+    $request->session()->put('user_data', $request->only(['nom_user', 'email', 'tel_user', 'password', 'tbl_filiere_id']));
+
+    // Envoyez le code de vérification à l'utilisateur
+    return $this->sendVerificationCode($request->email);
+}
+
+
+    public function sendVerificationCode($email)
     {
-        $validator = Validator::make($request->all(), [
-            'nom_user' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email|max:255',
-            'password' => 'required|string|min:8',
-            'tel_user' => 'required|string|min:9|unique:users,tel_user',
-            'tbl_filiere_id' => 'required|exists:tbl_filieres,id'
+        $verificationCode = Str::random(6); // Générer un code de vérification de 6 caractères
+
+        // Enregistrez le code de vérification dans la session de l'utilisateur
+        session()->put('verification_code', $verificationCode);
+
+        // Envoyer l'e-mail avec le code de vérification
+        Mail::raw("Votre code de vérification est : $verificationCode", function ($message) use ($email) {
+            $message->to($email)->subject('Code de vérification');
+        });
+
+        return response()->json(['message' => 'Code de vérification envoyé par e-mail']);
+    }
+
+
+    public function verify(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required|string|min:6|max:6',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+        // Récupérez le code de vérification de la session de l'utilisateur
+        $verificationCode = $request->session()->get('verification_code');
+
+        if (!$verificationCode) {
+            return response()->json(['message' => 'Code de vérification expiré ou non trouvé'], 404);
         }
-        try{
-            $user = User::create([
-                'nom_user' => $request->nom_user,
-                'email' => $request->email,
-                'tel_user' => $request->tel_user,
-                'tbl_filiere_id' => $request->tbl_filiere_id,
-                'password' => $request->password,
-            ]);
 
-            $token = Str::random(64);
-
-            UserVerify::create([
-                'user_id' => $user->id,
-                'token' => $token
-            ]);
-
-            Mail::send('emails.confirmation_code_plain', ['token' => $token], function($message) use($request){
-            $message->to($request->email);
-            $message->subject('Email Verification Mail');
-            });
-            return response()->json($user, 201);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
+        // Comparez le code soumis par l'utilisateur avec celui stocké en session
+        if ($request->code !== $verificationCode) {
+            return response()->json(['message' => 'Code de vérification incorrect'], 400);
         }
+
+        // Récupérez les informations de l'utilisateur de la session
+        $userData = $request->session()->get('user_data');
+
+        if (!$userData) {
+            return response()->json(['message' => 'Les informations de l\'utilisateur ne sont pas trouvées'], 400);
+        }
+
+        // Créez l'utilisateur dans la base de données
+        $user = User::create([
+            'nom_user' => $userData['nom_user'],
+            'email' => $userData['email'],
+            'tel_user' => $userData['tel_user'],
+            'tbl_filiere_id' => $userData['tbl_filiere_id'],
+            'password' => bcrypt($userData['password']), // N'oubliez pas de hacher le mot de passe
+        ]);
+
+        // Nettoyez les informations de la session après la création de l'utilisateur
+        $request->session()->forget(['verification_code', 'user_data']);
+
+        return response()->json(['message' => 'Adresse e-mail vérifiée avec succès et utilisateur créé', 'user' => $user], 201);
     }
 
 
@@ -102,67 +139,5 @@ class Authcontroller extends Controller
             return response()->json(['message' => 'Aucun utilisateur connecte'], 500);
         }
     }
-
-    public function verifyAccount($token)
-    {
-        $verifyUser = UserVerify::where('token', $token)->first();
-
-        if(!is_null($verifyUser) ){
-
-            $user = $verifyUser->user;
-            if(is_null($user->email_verified_at)) {
-                $verifyUser->user->email_verified_at = now();
-                $verifyUser->user->save();
-                $message = "Your e-mail is verified. You can now login";
-            } else {
-                $message = "Your e-mail is already verified. You can now login";
-            }
-            return view('confirmation_message',compact('message'));
-        }
-    }
-
-    // Méthode pour envoyer le code de vérification par e-mail
-    public function sendVerificationCode(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-
-        $verificationCode = Str::random(6); // Générer un code de vérification de 6 caractères
-
-        // Enregistrez le code de vérification dans la session de l'utilisateur
-        $request->session()->put('verification_code', $verificationCode);
-
-        // Envoyer l'e-mail avec le code de vérification
-        Mail::raw("Votre code de vérification est : $verificationCode", function ($message) use ($request) {
-            $message->to($request->email)->subject('Code de vérification');
-        });
-
-        return response()->json(['message' => 'Code de vérification envoyé par e-mail']);
-    }
-
-    // Méthode pour vérifier le code de vérification
-    public function verify(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'code' => 'required|string|min:6|max:6',
-        ]);
-
-        // Récupérez le code de vérification de la session de l'utilisateur
-        $verificationCode = $request->session()->get('verification_code');
-
-        if (!$verificationCode) {
-            return response()->json(['message' => 'Code de vérification expiré ou non trouvé'], 404);
-        }
-
-        // Comparez le code soumis par l'utilisateur avec celui stocké en session
-        if ($request->code !== $verificationCode) {
-            return response()->json(['message' => 'Code de vérification incorrect'], 400);
-        }
-
-        return response()->json(['message' => 'Adresse e-mail vérifiée avec succès']);
-    }
-
 
 }

@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'nom_user'=>'Fosso Cabrel',
-            "email"=>'fosso@gmail.com',
+            "email"=>'fossocabrel08@gmail.com',
             'tel_user'=>'675 88 66 84',
             'password'=> bcrypt('12345678'),
             'tbl_filiere_id'=>'1',

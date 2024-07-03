@@ -17,5 +17,25 @@ class CategorieSeeder extends Seeder
             'nom_cat'=>'article',
             'descript_cat'=>'gestion des articles de chercheurs',
         ]);
+
+        TblCategorie::create([
+            'nom_cat'=>'Memoire',
+            'descript_cat'=>'gestion des Memoires de chercheurs',
+        ]);
+
+        TblCategorie::create([
+            'nom_cat'=>'projets',
+            'descript_cat'=>'gestion des projets de chercheurs',
+        ]);
+
+        TblCategorie::create([
+            'nom_cat'=>'projets de cycle 1',
+            'descript_cat'=>'gestion des projets de cycle  1 de chercheurs',
+        ]);
+
+        TblCategorie::create([
+            'nom_cat'=>'projets de cycle 2',
+            'descript_cat'=>'gestion des projets de cycle  1 de chercheurs',
+        ]);
     }
 }

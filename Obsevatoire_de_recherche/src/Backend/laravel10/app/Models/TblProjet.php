@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class TblProjet extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -56,6 +57,16 @@ class TblProjet extends Model
     public function collaborateurs()
     {
         return $this->belongsToMany(TblCollaborateur::class, 'collaborateur_projets');
+    }
+
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        return [
+            'titre_projet' => $array['titre_projet'],
+            'descript_projet' => $array['descript_projet'],
+        ];
     }
 
     /**

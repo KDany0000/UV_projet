@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class TblDocument extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +33,21 @@ class TblDocument extends Model
     {
         return $this->belongsTo(TblProjet::class);
     }
+
+
+    // Définit les champs indexables pour Laravel Scout
+    public function toSearchableArray()
+    {
+        return [
+            'nom_doc' => $this->nom_doc,
+        ];
+    }
+
+    // Définir l'index spécifique pour ce modèle
+    // public function searchableAs()
+    // {
+    //     return 'tbl_documents';
+    // }
 
 
     /**
