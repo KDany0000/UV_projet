@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Usecases\Authcontroller;
 use App\Http\Controllers\Usecases\FileUploadController;
 use App\Http\Controllers\Usecases\GestionMotDePasseController;
+use App\Http\Controllers\Usecases\RechercheController;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,7 +123,7 @@ Route::prefix('usecases')->group(function () {
     //toutes les routes des usecases
 
     Route::prefix('auth')->controller(Authcontroller::class)->group(function(){
-        Route::post('inscription' , 'inscription');
+        Route::post('inscription' , 'inscription')->middleware('web');
         Route::post('connexion' ,  'connexion');
         Route::post('verification' ,  'sendVerificationCode')->middleware('web');
         Route::post('verify' ,  'verify')->middleware('web');
@@ -139,5 +140,13 @@ Route::prefix('usecases')->group(function () {
 
 
     });
+
+
+    Route::prefix('search')->controller(RechercheController::class)->group(function(){
+        Route::get('/projets', 'searchProjects');
+        Route::get('/documents', 'searchDocuments');
+        Route::get('/categories', 'searchCategories');
+    });
+
 
 });

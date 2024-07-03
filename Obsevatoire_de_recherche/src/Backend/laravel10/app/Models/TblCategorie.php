@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class TblCategorie extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +24,21 @@ class TblCategorie extends Model
     {
         return $this->hasMany(TblProjet::class);
     }
+
+    // Définit les champs indexables pour Laravel Scout
+    public function toSearchableArray()
+    {
+        return [
+            'nom_cat' => $this->nom_cat,
+            'descript_cat' => $this->descript_cat,
+        ];
+    }
+
+    // Définir l'index spécifique pour ce modèle
+    // public function searchableAs()
+    // {
+    //     return 'tbl_categories';
+    // }
 
     /**
      * The attributes that should be hidden for serialization.
