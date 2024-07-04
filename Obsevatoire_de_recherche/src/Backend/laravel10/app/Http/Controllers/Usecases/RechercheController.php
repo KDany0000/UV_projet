@@ -9,8 +9,35 @@ use App\Models\TblCategorie;
 use App\Models\TblDocument;
 use Illuminate\Support\Facades\Log;
 
+
 class RechercheController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/usecases/search/Projects",
+     *     summary="Rechercher des projets",
+     *     tags={"Recherche"},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Texte de recherche pour les projets"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des projets correspondants",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/TblProjet")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Requête invalide"
+     *     )
+     * )
+     */
     public function searchProjects(Request $request)
     {
         $query = $request->input('query');
@@ -70,7 +97,32 @@ class RechercheController extends Controller
         return response()->json($results);
     }
 
-
+    /**
+     * @OA\Get(
+     *     path="/api/usecases/search/Documents",
+     *     summary="Rechercher des documents",
+     *     tags={"Recherche"},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Texte de recherche pour les documents"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des documents correspondants",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/TblDocument")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Requête invalide"
+     *     )
+     * )
+     */
     public function searchDocuments(Request $request)
     {
         $query = $request->input('query');
@@ -115,7 +167,32 @@ class RechercheController extends Controller
         return response()->json($results);
     }
 
-
+    /**
+     * @OA\Get(
+     *     path="/api/usecases/search/categories",
+     *     summary="Rechercher des catégories",
+     *     tags={"Recherche"},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Texte de recherche pour les catégories"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des catégories correspondantes",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/TblCategorie")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Requête invalide"
+     *     )
+     * )
+     */
     public function searchCategories(Request $request)
     {
         $query = $request->input('query');
@@ -142,7 +219,6 @@ class RechercheController extends Controller
                                         ],
                                     ],
                                 ],
-
                                 [
                                     'match' => [
                                         'descript_cat' => [
@@ -150,12 +226,10 @@ class RechercheController extends Controller
                                             'fuzziness' => 'AUTO',
                                         ],
                                     ],
-
                                 ],
-
-                                 [
+                                [
                                     'prefix' => [
-                                        'descript_projet' => [
+                                        'descript_cat' => [
                                             'value' => $query,
                                         ],
                                     ],

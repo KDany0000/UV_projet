@@ -19,6 +19,7 @@ class ProjetSeeder extends Seeder
             'user_id'=>'1',
             'tbl_niveau_id'=>'1',
             'tbl_categorie_id'=>'1',
+
         ]);
 
         TblProjet::create([

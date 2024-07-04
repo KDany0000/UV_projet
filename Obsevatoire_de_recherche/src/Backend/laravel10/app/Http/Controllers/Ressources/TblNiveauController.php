@@ -10,7 +10,16 @@ use Illuminate\Support\Facades\Validator;
 class TblNiveauController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/ressources/niveaux",
+     *     summary="Get list of all niveaux",
+     *     tags={"Niveaux"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of niveaux",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/TblNiveau"))
+     *     )
+     * )
      */
     public function index()
     {
@@ -19,26 +28,61 @@ class TblNiveauController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/ressources/niveaux",
+     *     summary="Create a new niveau",
+     *     tags={"Niveaux"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblNiveau")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Niveau created",
+     *         @OA\JsonContent(ref="#/components/schemas/TblNiveau")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'code_niv'=>'required|unique:tbl_niveaux,code_niv|max:255',
+            'code_niv' => 'required|unique:tbl_niveaux,code_niv|max:255',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
         $niveau = TblNiveau::create([
             'code_niv' => $request->code_niv,
-
         ]);
         return response()->json($niveau);
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/ressources/niveaux/{id}",
+     *     summary="Get a niveau by ID",
+     *     tags={"Niveaux"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Niveau details",
+     *         @OA\JsonContent(ref="#/components/schemas/TblNiveau")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Niveau not found"
+     *     )
+     * )
      */
     public function show(string $id)
     {
@@ -47,14 +91,41 @@ class TblNiveauController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/ressources/niveaux/{id}",
+     *     summary="Update a niveau",
+     *     tags={"Niveaux"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblNiveau")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Niveau updated",
+     *         @OA\JsonContent(ref="#/components/schemas/TblNiveau")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Niveau not found"
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'code_niv'=>'required|max:255',
+            'code_niv' => 'required|max:255',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
@@ -64,11 +135,28 @@ class TblNiveauController extends Controller
         $niveau->save();
 
         return response()->json($niveau);
-
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/ressources/niveaux/{id}",
+     *     summary="Delete a niveau",
+     *     tags={"Niveaux"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Niveau deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Niveau not found"
+     *     )
+     * )
      */
     public function destroy(string $id)
     {

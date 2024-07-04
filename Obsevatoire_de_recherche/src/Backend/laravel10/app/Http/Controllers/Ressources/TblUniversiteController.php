@@ -10,7 +10,16 @@ use Illuminate\Support\Facades\Validator;
 class TblUniversiteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="api/ressources/universites",
+     *     summary="Get list of all universites",
+     *     tags={"Universites"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of universites",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/TblUniversite"))
+     *     )
+     * )
      */
     public function index()
     {
@@ -19,7 +28,24 @@ class TblUniversiteController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/ressources/universites",
+     *     summary="Create a new universite",
+     *     tags={"Universites"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblUniversite")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Universite created",
+     *         @OA\JsonContent(ref="#/components/schemas/TblUniversite")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -44,18 +70,63 @@ class TblUniversiteController extends Controller
         return response()->json($universite, 201);
     }
 
-
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="api/ressources/universites/{id}",
+     *     summary="Get a universite by ID",
+     *     tags={"Universites"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Universite details",
+     *         @OA\JsonContent(ref="#/components/schemas/TblUniversite")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Universite not found"
+     *     )
+     * )
      */
     public function show(string $id)
     {
-        $universite = TblUniversite::where('id' ,$id )->firstOrFail();
+        $universite = TblUniversite::where('id', $id)->firstOrFail();
         return response()->json($universite);
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="api/ressources/universites/{id}",
+     *     summary="Update a universite",
+     *     tags={"Universites"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblUniversite")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Universite updated",
+     *         @OA\JsonContent(ref="#/components/schemas/TblUniversite")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Universite not found"
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {
@@ -70,7 +141,7 @@ class TblUniversiteController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $universite = TblUniversite::where('id',$id)->firstOrFail();
+        $universite = TblUniversite::where('id', $id)->firstOrFail();
         $universite->nom_univ = $request->nom_univ;
         $universite->localite_univ = $request->localite_univ;
         $universite->email_univ = $request->email_univ;
@@ -81,9 +152,27 @@ class TblUniversiteController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="api/ressources/universites/{id}",
+     *     summary="Delete a universite",
+     *     tags={"Universites"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Universite deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Universite not found"
+     *     )
+     * )
      */
-    public function destroy(String $id)
+    public function destroy(string $id)
     {
         TblUniversite::where('id', $id)->delete();
         return response()->noContent();

@@ -5,6 +5,32 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
+/**
+ * @OA\Schema(
+ *     schema="TblCollaborateur",
+ *     type="object",
+ *     title="TblCollaborateur",
+ *     required={"nom_collab", "email_collab"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         description="The unique identifier of the collaborator"
+ *     ),
+ *     @OA\Property(
+ *         property="nom_collab",
+ *         type="string",
+ *         description="Name of the collaborator"
+ *     ),
+ *     @OA\Property(
+ *         property="email_collab",
+ *         type="string",
+ *         description="Email of the collaborator"
+ *     )
+ * )
+ */
+
 class TblCollaborateur extends Model
 {
     use HasFactory;

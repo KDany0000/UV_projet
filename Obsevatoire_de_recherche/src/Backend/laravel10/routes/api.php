@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Usecases\Authcontroller;
 use App\Http\Controllers\Usecases\FileUploadController;
 use App\Http\Controllers\Usecases\GestionMotDePasseController;
+use App\Http\Controllers\Usecases\ListingController;
 use App\Http\Controllers\Usecases\RechercheController;
 
 /*
@@ -146,6 +147,15 @@ Route::prefix('usecases')->group(function () {
         Route::get('/projets', 'searchProjects');
         Route::get('/documents', 'searchDocuments');
         Route::get('/categories', 'searchCategories');
+    });
+
+    Route::prefix('listing')->controller(ListingController::class)->group(function(){
+        Route::get('/categorie/projets/{id}', 'showProjects');
+        Route::get('/documents/{id}', 'ShowDocuments');
+        Route::get('/niveau/projets/{id}', 'ShowLevelProjects');
+        Route::get('/user/documents/{id}', 'showUserDocuments');
+        Route::get('/user/projets/{id}', 'showUserProjects');
+
     });
 
 

@@ -19,6 +19,7 @@ class DocumentSeeder extends Seeder
             'type_doc'=>'PDF',
             'resume'=>' resume 1',
             'tbl_projet_id'=>'1',
+            'user_id'=>'1',
         ]);
 
         TblDocument::create([
@@ -27,6 +28,7 @@ class DocumentSeeder extends Seeder
             'type_doc'=>'PDF',
             'resume'=>' resume 2',
             'tbl_projet_id'=>'1',
+            'user_id'=>'1',
         ]);
 
         TblDocument::create([
@@ -35,6 +37,7 @@ class DocumentSeeder extends Seeder
             'type_doc'=>'PDF',
             'resume'=>' resume 3',
             'tbl_projet_id'=>'1',
+            'user_id'=>'2',
         ]);
 
         TblDocument::create([
@@ -43,6 +46,7 @@ class DocumentSeeder extends Seeder
             'type_doc'=>'PDF',
             'resume'=>' resume 4',
             'tbl_projet_id'=>'1',
+            'user_id'=>'3',
         ]);
     }
 }

@@ -1,0 +1,2852 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "This is the API documentation for my application.",
+        "contact": {
+            "email": "your-email@example.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Local API server"
+        }
+    ],
+    "paths": {
+        "/api/ressources/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get list of categories",
+                "description": "Returns list of categories",
+                "operationId": "getCategoriesList",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblCategorie"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Create a new category",
+                "description": "Creates a new category and returns it",
+                "operationId": "storeCategory",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nom_cat": {
+                                        "description": "Name of the category",
+                                        "type": "string"
+                                    },
+                                    "descript_cat": {
+                                        "description": "Description of the category",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblCategorie"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "description": "Validation errors",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ressources/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get category by ID",
+                "description": "Returns a single category",
+                "operationId": "getCategoryById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblCategorie"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update an existing category",
+                "description": "Updates a category and returns it",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nom_cat": {
+                                        "description": "Name of the category",
+                                        "type": "string"
+                                    },
+                                    "descript_cat": {
+                                        "description": "Description of the category",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblCategorie"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "description": "Validation errors",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete a category",
+                "description": "Deletes a category",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/api/ressources/collaborateurs": {
+            "get": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Get list of all collaborators",
+                "operationId": "bfa0b07a8cf7f4696a1f05b9fae713b8",
+                "responses": {
+                    "200": {
+                        "description": "A list of collaborators",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblCollaborateur"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Create a new collaborator",
+                "operationId": "0623b868a887330fc39b88af8c8120d1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblCollaborateur"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Collaborator created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblCollaborateur"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/ressources/collaborateurs/{id}": {
+            "get": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Get a collaborator by ID",
+                "operationId": "dbd1782b356813fd699301ca2e0d19ef",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Collaborator details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblCollaborateur"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Collaborator not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Update a collaborator",
+                "operationId": "38801022244d0a79cf11a1ff41855127",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblCollaborateur"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Collaborator updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblCollaborateur"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Collaborator not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Delete a collaborator",
+                "operationId": "8f36d658e94e7faabd9c66be07b8da52",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Collaborator deleted"
+                    },
+                    "404": {
+                        "description": "Collaborator not found"
+                    }
+                }
+            }
+        },
+        "/api/ressources/documents": {
+            "get": {
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Get list of all documents",
+                "operationId": "e059be3fabb6af1ccf88067a25b3a480",
+                "responses": {
+                    "200": {
+                        "description": "A list of documents",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblDocument"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Create a new document",
+                "operationId": "698daea28a49ea4b8b0fea05979507ae",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblDocument"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Document created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblDocument"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/ressources/documents/{id}": {
+            "get": {
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Get a document by ID",
+                "operationId": "0f4fc7603b3df3b74b4dd6a179c227a3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Document details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblDocument"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Document not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Update a document",
+                "operationId": "b3457c185bb0af57181739041cc79dfa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblDocument"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Document updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblDocument"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Document not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Delete a document",
+                "operationId": "b09ff65c58c39ad0503652192a5669d7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Document deleted"
+                    },
+                    "404": {
+                        "description": "Document not found"
+                    }
+                }
+            }
+        },
+        "/api/ressources/facultes": {
+            "get": {
+                "tags": [
+                    "Faculties"
+                ],
+                "summary": "Get list of all faculties",
+                "operationId": "0ee438e8d13ef8e8cc2957b5a836d679",
+                "responses": {
+                    "200": {
+                        "description": "A list of faculties",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblFaculte"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Faculties"
+                ],
+                "summary": "Create a new faculty",
+                "operationId": "7fdbd2283914b6298921483556119d47",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblFaculte"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Faculty created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblFaculte"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/ressources/facultes/{id}": {
+            "get": {
+                "tags": [
+                    "Faculties"
+                ],
+                "summary": "Get a faculty by ID",
+                "operationId": "e8aaecab625efa013aed424d0bc04aff",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Faculty details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblFaculte"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Faculty not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Faculties"
+                ],
+                "summary": "Update a faculty",
+                "operationId": "1387d3ec19df6dd840b4ddcf00efc1f9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblFaculte"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Faculty updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblFaculte"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Faculty not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Faculties"
+                ],
+                "summary": "Delete a faculty",
+                "operationId": "99597f2c90970b9a0aa9f359760c93c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Faculty deleted"
+                    },
+                    "404": {
+                        "description": "Faculty not found"
+                    }
+                }
+            }
+        },
+        "/api/ressources/filieres": {
+            "get": {
+                "tags": [
+                    "Filieres"
+                ],
+                "summary": "Get list of all filieres",
+                "operationId": "4f73faa12b9c70cc0a73e2bd525531b5",
+                "responses": {
+                    "200": {
+                        "description": "A list of filieres",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblFiliere"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Filieres"
+                ],
+                "summary": "Create a new filiere",
+                "operationId": "c4a71b949c6881743e3c63b0f118fbc7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblFiliere"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Filiere created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblFiliere"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/ressources/filieres/{id}": {
+            "get": {
+                "tags": [
+                    "Filieres"
+                ],
+                "summary": "Get a filiere by ID",
+                "operationId": "bf75d13638ad78c09fa151c169f7c5e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Filiere details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblFiliere"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Filiere not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Filieres"
+                ],
+                "summary": "Update a filiere",
+                "operationId": "aa86282a3c76fceabcad172af33a947c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblFiliere"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Filiere updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblFiliere"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Filiere not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Filieres"
+                ],
+                "summary": "Delete a filiere",
+                "operationId": "0654372dd424ddb5c879ce89503d5cdd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Filiere deleted"
+                    },
+                    "404": {
+                        "description": "Filiere not found"
+                    }
+                }
+            }
+        },
+        "/api/ressources/niveaux": {
+            "get": {
+                "tags": [
+                    "Niveaux"
+                ],
+                "summary": "Get list of all niveaux",
+                "operationId": "b76da7f932d8781753b2f59b7c200bfe",
+                "responses": {
+                    "200": {
+                        "description": "A list of niveaux",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblNiveau"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Niveaux"
+                ],
+                "summary": "Create a new niveau",
+                "operationId": "a5e744f0e0c69409ca61a3c701cad19b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblNiveau"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Niveau created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblNiveau"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/ressources/niveaux/{id}": {
+            "get": {
+                "tags": [
+                    "Niveaux"
+                ],
+                "summary": "Get a niveau by ID",
+                "operationId": "d80a2b2135d8766c506b7cfccd9eefd4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Niveau details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblNiveau"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Niveau not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Niveaux"
+                ],
+                "summary": "Update a niveau",
+                "operationId": "0895c8a582ccc152ce5cab12f6b04988",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblNiveau"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Niveau updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblNiveau"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Niveau not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Niveaux"
+                ],
+                "summary": "Delete a niveau",
+                "operationId": "0fd7754e9557b367ff1be550955b013a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Niveau deleted"
+                    },
+                    "404": {
+                        "description": "Niveau not found"
+                    }
+                }
+            }
+        },
+        "/api/ressources/projets": {
+            "get": {
+                "tags": [
+                    "Projets"
+                ],
+                "summary": "Get list of all projets",
+                "operationId": "a3b932cfd57c73136eb4b2fa01a42572",
+                "responses": {
+                    "200": {
+                        "description": "A list of projets",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblProjet"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Projets"
+                ],
+                "summary": "Create a new projet",
+                "operationId": "6e8ca8aa36c1ec13c4099fdde3b8a1f5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblProjet"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Projet created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblProjet"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/ressources/projets/{id}": {
+            "get": {
+                "tags": [
+                    "Projets"
+                ],
+                "summary": "Get a projet by ID",
+                "operationId": "56967419d0c2502e6033bae10a4869a6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Projet details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblProjet"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Projet not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Projets"
+                ],
+                "summary": "Update a projet",
+                "operationId": "ec65b48be4c10005366c2f4b632caa7d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblProjet"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Projet updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblProjet"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Projet not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Projets"
+                ],
+                "summary": "Delete a projet",
+                "operationId": "c369f0f51a91ce45b2f980037e9d19a7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Projet deleted"
+                    },
+                    "404": {
+                        "description": "Projet not found"
+                    }
+                }
+            }
+        },
+        "/api/ressources/superviseurs": {
+            "get": {
+                "tags": [
+                    "Superviseurs"
+                ],
+                "summary": "Get list of all superviseurs",
+                "operationId": "f56f349d9efdb24e4172a3260b078658",
+                "responses": {
+                    "200": {
+                        "description": "A list of superviseurs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblSuperviseur"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Superviseurs"
+                ],
+                "summary": "Create a new superviseur",
+                "operationId": "5711fcdfdf2c25eadfc109f22b9a4639",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblSuperviseur"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Superviseur created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblSuperviseur"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/ressources/superviseurs/{id}": {
+            "get": {
+                "tags": [
+                    "Superviseurs"
+                ],
+                "summary": "Get a superviseur by ID",
+                "operationId": "82c75b608f48688b4121fc3237c756c3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Superviseur details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblSuperviseur"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Superviseur not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Superviseurs"
+                ],
+                "summary": "Update a superviseur",
+                "operationId": "e72b4f99959fc7cae5cbc7517ec28b5b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblSuperviseur"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Superviseur updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblSuperviseur"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Superviseur not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Superviseurs"
+                ],
+                "summary": "Delete a superviseur",
+                "operationId": "ae89acc70f04b4530f50bac407bc9977",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Superviseur deleted"
+                    },
+                    "404": {
+                        "description": "Superviseur not found"
+                    }
+                }
+            }
+        },
+        "api/ressources/universites": {
+            "get": {
+                "tags": [
+                    "Universites"
+                ],
+                "summary": "Get list of all universites",
+                "operationId": "e652578d27a3f72dc070f52ce98ed42e",
+                "responses": {
+                    "200": {
+                        "description": "A list of universites",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblUniversite"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ressources/universites": {
+            "post": {
+                "tags": [
+                    "Universites"
+                ],
+                "summary": "Create a new universite",
+                "operationId": "ce7c46bac6fd3ab66247c6429fceab99",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblUniversite"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Universite created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblUniversite"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "api/ressources/universites/{id}": {
+            "get": {
+                "tags": [
+                    "Universites"
+                ],
+                "summary": "Get a universite by ID",
+                "operationId": "a5ea75eece62ff814219080183c65960",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Universite details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblUniversite"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Universite not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Universites"
+                ],
+                "summary": "Update a universite",
+                "operationId": "5990c5f5a5ff292ebf532b1624bd0cba",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TblUniversite"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Universite updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TblUniversite"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Universite not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Universites"
+                ],
+                "summary": "Delete a universite",
+                "operationId": "d78dc031101a407f37bb7816dd50b982",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Universite deleted"
+                    },
+                    "404": {
+                        "description": "Universite not found"
+                    }
+                }
+            }
+        },
+        "/api/usecases/auth/inscription": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Inscription de l'utilisateur",
+                "operationId": "754f035abacf0a9f8988dedf7241e02c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nom_user": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "tel_user": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "tbl_filiere_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Code de vérification envoyé par e-mail"
+                    },
+                    "400": {
+                        "description": "Erreur de validation"
+                    }
+                }
+            }
+        },
+        "/api/usecases/auth/verify": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Vérification du code",
+                "operationId": "db773d954bd333f573ab0cf9bf4e4fdb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "ABC123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Adresse e-mail vérifiée avec succès et utilisateur créé"
+                    },
+                    "400": {
+                        "description": "Code de vérification incorrect"
+                    },
+                    "404": {
+                        "description": "Code de vérification expiré ou non trouvé"
+                    }
+                }
+            }
+        },
+        "/api/usecases/auth/connexion": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Connexion de l'utilisateur",
+                "operationId": "bd6879ae17450a37c469784818527c81",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Access autorisé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Access autorisé"
+                                        },
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur de validation"
+                    },
+                    "401": {
+                        "description": "Access non autorisé"
+                    }
+                }
+            }
+        },
+        "api/auth/deconnexion": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Déconnexion de l'utilisateur",
+                "operationId": "45d9e4f88d2f414dccb0ced991277f0c",
+                "responses": {
+                    "200": {
+                        "description": "Déconnexion réussie"
+                    },
+                    "500": {
+                        "description": "Aucun utilisateur connecté"
+                    }
+                }
+            }
+        },
+        "/api/usecases/upload": {
+            "post": {
+                "tags": [
+                    "Fichiers"
+                ],
+                "summary": "Télécharger un fichier",
+                "operationId": "418f55526cc906555b6eec4441acbc49",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "file": {
+                                        "description": "Fichier à télécharger",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "path": {
+                                        "description": "Chemin où le fichier sera stocké",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "URL publique du fichier téléchargé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "url": {
+                                            "type": "string",
+                                            "example": "http://example.com/storage/public/path/to/file.txt"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation échouée"
+                    }
+                }
+            }
+        },
+        "/api/usecases/upload/delete": {
+            "delete": {
+                "tags": [
+                    "Fichiers"
+                ],
+                "summary": "Supprimer un fichier",
+                "operationId": "54f88bde1e9cf3198538d446cbae969b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "path": {
+                                        "description": "Chemin du fichier à supprimer",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Fichier supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "File deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Fichier non trouvé"
+                    }
+                }
+            }
+        },
+        "/api/usecases/password/sendEmailReset": {
+            "post": {
+                "tags": [
+                    "Gestion des mots de passe"
+                ],
+                "summary": "Envoyer le lien de réinitialisation du mot de passe",
+                "operationId": "8769dc58e69f0078ab22ddabb5dba3e5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "Adresse email de l'utilisateur",
+                                        "type": "string",
+                                        "format": "email"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lien de réinitialisation envoyé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "We have emailed your password reset link!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation échouée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email field is required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/usecases/password/resetpassword": {
+            "post": {
+                "tags": [
+                    "Gestion des mots de passe"
+                ],
+                "summary": "Réinitialiser le mot de passe",
+                "operationId": "c336ad5a0dbdfd9089e5eaebc0c14477",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "Adresse email de l'utilisateur",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "description": "Nouveau mot de passe",
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Confirmation du nouveau mot de passe",
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "token": {
+                                        "description": "Token de réinitialisation",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mot de passe réinitialisé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password has been reset successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation échouée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email field is required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{id}/projects": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get projects by category ID",
+                "description": "Returns a list of projects associated with the given category ID",
+                "operationId": "showProjects",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblProjet"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/projects/{id}/documents": {
+            "get": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Get documents by project ID",
+                "description": "Returns a list of documents associated with the given project ID",
+                "operationId": "showDocuments",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Project ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblDocument"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found"
+                    }
+                }
+            }
+        },
+        "/levels/{id}/projects": {
+            "get": {
+                "tags": [
+                    "Levels"
+                ],
+                "summary": "Get projects by level ID",
+                "description": "Returns a list of projects associated with the given level ID",
+                "operationId": "showLevelProjects",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Level ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblProjet"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Level not found"
+                    }
+                }
+            }
+        },
+        "/users/{id}/projects": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get projects by user ID",
+                "description": "Returns a list of projects associated with the given user ID",
+                "operationId": "showUserProjects",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblProjet"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/users/{id}/documents": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get documents by user ID",
+                "description": "Returns a list of documents associated with the given user ID",
+                "operationId": "showUserDocuments",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblDocument"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/usecases/search/Projects": {
+            "get": {
+                "tags": [
+                    "Recherche"
+                ],
+                "summary": "Rechercher des projets",
+                "operationId": "7072072be454cc8f86474555765e23dc",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Texte de recherche pour les projets",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des projets correspondants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblProjet"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requête invalide"
+                    }
+                }
+            }
+        },
+        "/api/usecases/search/Documents": {
+            "get": {
+                "tags": [
+                    "Recherche"
+                ],
+                "summary": "Rechercher des documents",
+                "operationId": "ef0d4b6124328af4904513127d5bfa63",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Texte de recherche pour les documents",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des documents correspondants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblDocument"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requête invalide"
+                    }
+                }
+            }
+        },
+        "/api/usecases/search/categories": {
+            "get": {
+                "tags": [
+                    "Recherche"
+                ],
+                "summary": "Rechercher des catégories",
+                "operationId": "dabf2f02c4e7511d8b6de6d3a060643b",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Texte de recherche pour les catégories",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des catégories correspondantes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TblCategorie"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requête invalide"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "TblCategorie": {
+                "title": "TblCategorie",
+                "required": [
+                    "nom_cat",
+                    "descript_cat"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the category",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "nom_cat": {
+                        "description": "Name of the category",
+                        "type": "string"
+                    },
+                    "descript_cat": {
+                        "description": "Description of the category",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TblCollaborateur": {
+                "title": "TblCollaborateur",
+                "required": [
+                    "nom_collab",
+                    "email_collab"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the collaborator",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "nom_collab": {
+                        "description": "Name of the collaborator",
+                        "type": "string"
+                    },
+                    "email_collab": {
+                        "description": "Email of the collaborator",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TblCollaborateurProjet": {
+                "title": "TblCollaborateurProjet",
+                "required": [
+                    "tbl_projet_id",
+                    "tbl_collaborateur_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the collaboration project",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "tbl_projet_id": {
+                        "description": "ID of the project",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "tbl_collaborateur_id": {
+                        "description": "ID of the collaborator",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "TblCollaborateurUtilisateur": {
+                "title": "TblCollaborateurUtilisateur",
+                "required": [
+                    "tbl_utilisateur_id",
+                    "tbl_collaborateur_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the collaborator-user relationship",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "tbl_utilisateur_id": {
+                        "description": "ID of the user",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "tbl_collaborateur_id": {
+                        "description": "ID of the collaborator",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "TblDocument": {
+                "title": "TblDocument",
+                "required": [
+                    "nom_doc",
+                    "lien_doc",
+                    "type_doc",
+                    "resume",
+                    "tbl_projet_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the document",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "nom_doc": {
+                        "description": "Name of the document",
+                        "type": "string"
+                    },
+                    "lien_doc": {
+                        "description": "Link to the document",
+                        "type": "string"
+                    },
+                    "type_doc": {
+                        "description": "Type of the document (PDF, WORD, POWEPOINT)",
+                        "type": "string"
+                    },
+                    "resume": {
+                        "description": "Summary of the document",
+                        "type": "string"
+                    },
+                    "tbl_projet_id": {
+                        "description": "ID of the related project",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TblFaculte": {
+                "title": "TblFaculte",
+                "required": [
+                    "nom_fac",
+                    "email_fac",
+                    "tbl_universite_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the faculty",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "nom_fac": {
+                        "description": "Name of the faculty",
+                        "type": "string"
+                    },
+                    "email_fac": {
+                        "description": "Email of the faculty",
+                        "type": "string"
+                    },
+                    "tbl_universite_id": {
+                        "description": "ID of the related university",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TblFiliere": {
+                "title": "TblFiliere",
+                "required": [
+                    "nom_fil",
+                    "tbl_faculte_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the filiere",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "nom_fil": {
+                        "description": "Name of the filiere",
+                        "type": "string"
+                    },
+                    "tbl_faculte_id": {
+                        "description": "ID of the related faculte",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TblNiveau": {
+                "title": "TblNiveau",
+                "required": [
+                    "code_niv"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the niveau",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "code_niv": {
+                        "description": "Code of the niveau",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TblProjet": {
+                "title": "TblProjet",
+                "required": [
+                    "titre_projet",
+                    "descript_projet",
+                    "tbl_niveau_id",
+                    "user_id",
+                    "tbl_categorie_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the projet",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "titre_projet": {
+                        "description": "Title of the projet",
+                        "type": "string"
+                    },
+                    "descript_projet": {
+                        "description": "Description of the projet",
+                        "type": "string"
+                    },
+                    "tbl_niveau_id": {
+                        "description": "The ID of the associated niveau",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "user_id": {
+                        "description": "The ID of the associated user",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "tbl_categorie_id": {
+                        "description": "The ID of the associated categorie",
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "type": "object"
+            },
+            "TblProjetSuperviseur": {
+                "title": "TblProjetSuperviseur",
+                "required": [
+                    "tbl_projet_id",
+                    "tbl_superviseur_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the project-supervisor relationship",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "tbl_projet_id": {
+                        "description": "ID of the project",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "tbl_superviseur_id": {
+                        "description": "ID of the supervisor",
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "type": "object"
+            },
+            "TblSuperviseur": {
+                "title": "TblSuperviseur",
+                "required": [
+                    "nom_sup",
+                    "email_sup"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the superviseur",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "nom_sup": {
+                        "description": "Name of the superviseur",
+                        "type": "string"
+                    },
+                    "email_sup": {
+                        "description": "Email of the superviseur",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TblSuperviseurUser": {
+                "title": "TblSuperviseurUser",
+                "required": [
+                    "user_id",
+                    "tbl_superviseur_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the supervisor-user relationship",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "user_id": {
+                        "description": "ID of the user",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "tbl_superviseur_id": {
+                        "description": "ID of the supervisor",
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "type": "object"
+            },
+            "TblUniversite": {
+                "title": "TblUniversite",
+                "required": [
+                    "nom_univ",
+                    "localite_univ",
+                    "email_univ",
+                    "boite_postale"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the universite",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "nom_univ": {
+                        "description": "Name of the universite",
+                        "type": "string"
+                    },
+                    "localite_univ": {
+                        "description": "Location of the universite",
+                        "type": "string"
+                    },
+                    "email_univ": {
+                        "description": "Email of the universite",
+                        "type": "string"
+                    },
+                    "boite_postale": {
+                        "description": "Postal box of the universite",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Collaborators",
+            "description": "Collaborators"
+        },
+        {
+            "name": "Collaborators",
+            "description": "Collaborators"
+        },
+        {
+            "name": "Collaborators",
+            "description": "Collaborators"
+        },
+        {
+            "name": "Collaborators",
+            "description": "Collaborators"
+        },
+        {
+            "name": "Collaborators",
+            "description": "Collaborators"
+        },
+        {
+            "name": "Documents",
+            "description": "Documents"
+        },
+        {
+            "name": "Documents",
+            "description": "Documents"
+        },
+        {
+            "name": "Documents",
+            "description": "Documents"
+        },
+        {
+            "name": "Documents",
+            "description": "Documents"
+        },
+        {
+            "name": "Documents",
+            "description": "Documents"
+        },
+        {
+            "name": "Faculties",
+            "description": "Faculties"
+        },
+        {
+            "name": "Faculties",
+            "description": "Faculties"
+        },
+        {
+            "name": "Faculties",
+            "description": "Faculties"
+        },
+        {
+            "name": "Faculties",
+            "description": "Faculties"
+        },
+        {
+            "name": "Faculties",
+            "description": "Faculties"
+        },
+        {
+            "name": "Filieres",
+            "description": "Filieres"
+        },
+        {
+            "name": "Filieres",
+            "description": "Filieres"
+        },
+        {
+            "name": "Filieres",
+            "description": "Filieres"
+        },
+        {
+            "name": "Filieres",
+            "description": "Filieres"
+        },
+        {
+            "name": "Filieres",
+            "description": "Filieres"
+        },
+        {
+            "name": "Niveaux",
+            "description": "Niveaux"
+        },
+        {
+            "name": "Niveaux",
+            "description": "Niveaux"
+        },
+        {
+            "name": "Niveaux",
+            "description": "Niveaux"
+        },
+        {
+            "name": "Niveaux",
+            "description": "Niveaux"
+        },
+        {
+            "name": "Niveaux",
+            "description": "Niveaux"
+        },
+        {
+            "name": "Projets",
+            "description": "Projets"
+        },
+        {
+            "name": "Projets",
+            "description": "Projets"
+        },
+        {
+            "name": "Projets",
+            "description": "Projets"
+        },
+        {
+            "name": "Projets",
+            "description": "Projets"
+        },
+        {
+            "name": "Projets",
+            "description": "Projets"
+        },
+        {
+            "name": "Superviseurs",
+            "description": "Superviseurs"
+        },
+        {
+            "name": "Superviseurs",
+            "description": "Superviseurs"
+        },
+        {
+            "name": "Superviseurs",
+            "description": "Superviseurs"
+        },
+        {
+            "name": "Superviseurs",
+            "description": "Superviseurs"
+        },
+        {
+            "name": "Superviseurs",
+            "description": "Superviseurs"
+        },
+        {
+            "name": "Universites",
+            "description": "Universites"
+        },
+        {
+            "name": "Universites",
+            "description": "Universites"
+        },
+        {
+            "name": "Universites",
+            "description": "Universites"
+        },
+        {
+            "name": "Universites",
+            "description": "Universites"
+        },
+        {
+            "name": "Universites",
+            "description": "Universites"
+        },
+        {
+            "name": "Authentification",
+            "description": "Authentification"
+        },
+        {
+            "name": "Authentification",
+            "description": "Authentification"
+        },
+        {
+            "name": "Authentification",
+            "description": "Authentification"
+        },
+        {
+            "name": "Authentification",
+            "description": "Authentification"
+        },
+        {
+            "name": "Fichiers",
+            "description": "Fichiers"
+        },
+        {
+            "name": "Fichiers",
+            "description": "Fichiers"
+        },
+        {
+            "name": "Gestion des mots de passe",
+            "description": "Gestion des mots de passe"
+        },
+        {
+            "name": "Gestion des mots de passe",
+            "description": "Gestion des mots de passe"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Projects",
+            "description": "Projects"
+        },
+        {
+            "name": "Levels",
+            "description": "Levels"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        },
+        {
+            "name": "Recherche",
+            "description": "Recherche"
+        },
+        {
+            "name": "Recherche",
+            "description": "Recherche"
+        },
+        {
+            "name": "Recherche",
+            "description": "Recherche"
+        }
+    ]
+}

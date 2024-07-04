@@ -10,7 +10,16 @@ use Illuminate\Support\Facades\Validator;
 class TblProjetController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/ressources/projets",
+     *     summary="Get list of all projets",
+     *     tags={"Projets"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of projets",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/TblProjet"))
+     *     )
+     * )
      */
     public function index()
     {
@@ -19,7 +28,24 @@ class TblProjetController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/ressources/projets",
+     *     summary="Create a new projet",
+     *     tags={"Projets"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblProjet")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Projet created",
+     *         @OA\JsonContent(ref="#/components/schemas/TblProjet")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -29,7 +55,6 @@ class TblProjetController extends Controller
             'tbl_niveau_id' => 'required|exists:tbl_niveaux,id',
             'user_id' => 'required|exists:users,id',
             'tbl_categorie_id' => 'required|exists:tbl_categories,id',
-
         ]);
 
         if ($validator->fails()) {
@@ -47,18 +72,63 @@ class TblProjetController extends Controller
         return response()->json($projet, 201);
     }
 
-
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/ressources/projets/{id}",
+     *     summary="Get a projet by ID",
+     *     tags={"Projets"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Projet details",
+     *         @OA\JsonContent(ref="#/components/schemas/TblProjet")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Projet not found"
+     *     )
+     * )
      */
     public function show(string $id)
     {
-        $projet = TblProjet::where('id' ,$id )->firstOrFail();
+        $projet = TblProjet::where('id', $id)->firstOrFail();
         return response()->json($projet);
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/ressources/projets/{id}",
+     *     summary="Update a projet",
+     *     tags={"Projets"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblProjet")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Projet updated",
+     *         @OA\JsonContent(ref="#/components/schemas/TblProjet")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Projet not found"
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {
@@ -74,7 +144,7 @@ class TblProjetController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $projet = TblProjet::where('id',$id)->firstOrFail();
+        $projet = TblProjet::where('id', $id)->firstOrFail();
         $projet->titre_projet = $request->titre_projet;
         $projet->descript_projet = $request->descript_projet;
         $projet->tbl_niveau_id = $request->tbl_niveau_id;
@@ -86,9 +156,27 @@ class TblProjetController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/ressources/projets/{id}",
+     *     summary="Delete a projet",
+     *     tags={"Projets"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Projet deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Projet not found"
+     *     )
+     * )
      */
-    public function destroy(String $id)
+    public function destroy(string $id)
     {
         TblProjet::where('id', $id)->delete();
         return response()->noContent();

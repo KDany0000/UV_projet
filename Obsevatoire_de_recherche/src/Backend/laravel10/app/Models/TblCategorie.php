@@ -6,6 +6,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
+/**
+ * @OA\Schema(
+ *     schema="TblCategorie",
+ *     type="object",
+ *     title="TblCategorie",
+ *     required={"nom_cat", "descript_cat"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         description="The unique identifier of the category"
+ *     ),
+ *     @OA\Property(
+ *         property="nom_cat",
+ *         type="string",
+ *         description="Name of the category"
+ *     ),
+ *     @OA\Property(
+ *         property="descript_cat",
+ *         type="string",
+ *         description="Description of the category"
+ *     )
+ * )
+ */
+
 class TblCategorie extends Model
 {
     use HasFactory, Searchable;

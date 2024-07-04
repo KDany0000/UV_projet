@@ -10,7 +10,16 @@ use Illuminate\Support\Facades\Validator;
 class TblFiliereController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/ressources/filieres",
+     *     summary="Get list of all filieres",
+     *     tags={"Filieres"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of filieres",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/TblFiliere"))
+     *     )
+     * )
      */
     public function index()
     {
@@ -19,28 +28,63 @@ class TblFiliereController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/ressources/filieres",
+     *     summary="Create a new filiere",
+     *     tags={"Filieres"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblFiliere")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Filiere created",
+     *         @OA\JsonContent(ref="#/components/schemas/TblFiliere")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nom_fil'=>'required|unique:tbl_filieres,nom_fil|max:255',
-            'tbl_faculte_id'=>'required|exists:tbl_facultes,id'
+            'nom_fil' => 'required|unique:tbl_filieres,nom_fil|max:255',
+            'tbl_faculte_id' => 'required|exists:tbl_facultes,id'
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
         $filiere = TblFiliere::create([
             'nom_fil' => $request->nom_fil,
-            "tbl_faculte_id"=>$request->tbl_faculte_id,
-
+            'tbl_faculte_id' => $request->tbl_faculte_id,
         ]);
         return response()->json($filiere);
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/ressources/filieres/{id}",
+     *     summary="Get a filiere by ID",
+     *     tags={"Filieres"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Filiere details",
+     *         @OA\JsonContent(ref="#/components/schemas/TblFiliere")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Filiere not found"
+     *     )
+     * )
      */
     public function show(string $id)
     {
@@ -49,15 +93,42 @@ class TblFiliereController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/ressources/filieres/{id}",
+     *     summary="Update a filiere",
+     *     tags={"Filieres"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblFiliere")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Filiere updated",
+     *         @OA\JsonContent(ref="#/components/schemas/TblFiliere")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Filiere not found"
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'nom_fil'=>'required|max:255',
-            'tbl_faculte_id'=>'required|exists:tbl_facultes,id',
+            'nom_fil' => 'required|max:255',
+            'tbl_faculte_id' => 'required|exists:tbl_facultes,id',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
@@ -68,11 +139,28 @@ class TblFiliereController extends Controller
         $filiere->save();
 
         return response()->json($filiere);
-
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/ressources/filieres/{id}",
+     *     summary="Delete a filiere",
+     *     tags={"Filieres"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Filiere deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Filiere not found"
+     *     )
+     * )
      */
     public function destroy(string $id)
     {
