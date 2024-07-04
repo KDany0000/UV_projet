@@ -6,6 +6,50 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
+
+/**
+ * @OA\Schema(
+ *     schema="TblProjet",
+ *     type="object",
+ *     title="TblProjet",
+ *     required={"titre_projet", "descript_projet", "tbl_niveau_id", "user_id", "tbl_categorie_id"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         description="The unique identifier of the projet"
+ *     ),
+ *     @OA\Property(
+ *         property="titre_projet",
+ *         type="string",
+ *         description="Title of the projet"
+ *     ),
+ *     @OA\Property(
+ *         property="descript_projet",
+ *         type="string",
+ *         description="Description of the projet"
+ *     ),
+ *     @OA\Property(
+ *         property="tbl_niveau_id",
+ *         type="integer",
+ *         format="int64",
+ *         description="The ID of the associated niveau"
+ *     ),
+ *     @OA\Property(
+ *         property="user_id",
+ *         type="integer",
+ *         format="int64",
+ *         description="The ID of the associated user"
+ *     ),
+ *     @OA\Property(
+ *         property="tbl_categorie_id",
+ *         type="integer",
+ *         format="int64",
+ *         description="The ID of the associated categorie"
+ *     )
+ * )
+ */
+
 class TblProjet extends Model
 {
     use HasFactory, Searchable;

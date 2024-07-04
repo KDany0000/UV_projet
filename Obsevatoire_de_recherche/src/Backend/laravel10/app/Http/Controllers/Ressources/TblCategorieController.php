@@ -10,7 +10,18 @@ use Illuminate\Support\Facades\Validator;
 class TblCategorieController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/ressources/categories",
+     *     operationId="getCategoriesList",
+     *     tags={"Categories"},
+     *     summary="Get list of categories",
+     *     description="Returns list of categories",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/TblCategorie"))
+     *     )
+     * )
      */
     public function index()
     {
@@ -19,7 +30,32 @@ class TblCategorieController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/ressources/categories",
+     *     operationId="storeCategory",
+     *     tags={"Categories"},
+     *     summary="Create a new category",
+     *     description="Creates a new category and returns it",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nom_cat", type="string", description="Name of the category"),
+     *             @OA\Property(property="descript_cat", type="string", description="Description of the category")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/TblCategorie")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="errors", type="object", description="Validation errors")
+     *         )
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -40,7 +76,29 @@ class TblCategorieController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/ressources/categories/{id}",
+     *     operationId="getCategoryById",
+     *     tags={"Categories"},
+     *     summary="Get category by ID",
+     *     description="Returns a single category",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="ID of the category"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/TblCategorie")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found"
+     *     )
+     * )
      */
     public function show(string $id)
     {
@@ -49,7 +107,43 @@ class TblCategorieController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/ressources/categories/{id}",
+     *     operationId="updateCategory",
+     *     tags={"Categories"},
+     *     summary="Update an existing category",
+     *     description="Updates a category and returns it",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="ID of the category"
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nom_cat", type="string", description="Name of the category"),
+     *             @OA\Property(property="descript_cat", type="string", description="Description of the category")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/TblCategorie")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="errors", type="object", description="Validation errors")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found"
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {
@@ -72,7 +166,28 @@ class TblCategorieController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/ressources/categories/{id}",
+     *     operationId="deleteCategory",
+     *     tags={"Categories"},
+     *     summary="Delete a category",
+     *     description="Deletes a category",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="ID of the category"
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="No content"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found"
+     *     )
+     * )
      */
     public function destroy(string $id)
     {

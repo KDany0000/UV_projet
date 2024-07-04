@@ -7,12 +7,19 @@ use App\Models\TblFaculte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-use function Laravel\Prompts\error;
-
 class TblFaculteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/ressources/facultes",
+     *     summary="Get list of all faculties",
+     *     tags={"Faculties"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of faculties",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/TblFaculte"))
+     *     )
+     * )
      */
     public function index()
     {
@@ -21,7 +28,24 @@ class TblFaculteController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/ressources/facultes",
+     *     summary="Create a new faculty",
+     *     tags={"Faculties"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblFaculte")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Faculty created",
+     *         @OA\JsonContent(ref="#/components/schemas/TblFaculte")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -38,13 +62,31 @@ class TblFaculteController extends Controller
             'nom_fac' => $request->nom_fac,
             'email_fac' => $request->email_fac,
             "tbl_universite_id"=>$request->tbl_universite_id,
-
         ]);
         return response()->json($faculte);
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/ressources/facultes/{id}",
+     *     summary="Get a faculty by ID",
+     *     tags={"Faculties"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Faculty details",
+     *         @OA\JsonContent(ref="#/components/schemas/TblFaculte")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Faculty not found"
+     *     )
+     * )
      */
     public function show(string $id)
     {
@@ -53,7 +95,34 @@ class TblFaculteController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/ressources/facultes/{id}",
+     *     summary="Update a faculty",
+     *     tags={"Faculties"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/TblFaculte")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Faculty updated",
+     *         @OA\JsonContent(ref="#/components/schemas/TblFaculte")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Faculty not found"
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {
@@ -74,11 +143,28 @@ class TblFaculteController extends Controller
         $faculte->save();
 
         return response()->json($faculte);
-
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/ressources/facultes/{id}",
+     *     summary="Delete a faculty",
+     *     tags={"Faculties"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Faculty deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Faculty not found"
+     *     )
+     * )
      */
     public function destroy(string $id)
     {

@@ -4,40 +4,61 @@ namespace App\Http\Controllers\Usecases;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\UserVerify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ConfirmationCodeMail;
-use App\Utils\ErrorManager;
-use Exception;
 use Illuminate\Support\Str;
-class Authcontroller extends Controller
-{
-    //methode d'inscription
 
+
+
+class AuthController extends Controller
+{
+    /**
+     * @OA\Post(
+     *     path="/api/usecases/auth/inscription",
+     *     summary="Inscription de l'utilisateur",
+     *     tags={"Authentification"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nom_user", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123"),
+     *             @OA\Property(property="tel_user", type="string", example="123456789"),
+     *             @OA\Property(property="tbl_filiere_id", type="integer", example="1")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Code de vérification envoyé par e-mail"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erreur de validation"
+     *     )
+     * )
+     */
     public function inscription(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'nom_user' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email|max:255',
-        'password' => 'required|string|min:8',
-        'tel_user' => 'required|string|min:9|unique:users,tel_user',
-        'tbl_filiere_id' => 'required|exists:tbl_filieres,id'
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'nom_user' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => 'required|string|min:8',
+            'tel_user' => 'required|string|min:9|unique:users,tel_user',
+            'tbl_filiere_id' => 'required|exists:tbl_filieres,id'
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 400);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        // Enregistrez les informations de l'utilisateur dans la session avant la vérification de l'e-mail
+        $request->session()->put('user_data', $request->only(['nom_user', 'email', 'tel_user', 'password', 'tbl_filiere_id']));
+
+        // Envoyez le code de vérification à l'utilisateur
+        return $this->sendVerificationCode($request->email);
     }
-
-    // Enregistrez les informations de l'utilisateur dans la session avant la vérification de l'e-mail
-    $request->session()->put('user_data', $request->only(['nom_user', 'email', 'tel_user', 'password', 'tbl_filiere_id']));
-
-    // Envoyez le code de vérification à l'utilisateur
-    return $this->sendVerificationCode($request->email);
-}
-
 
     public function sendVerificationCode($email)
     {
@@ -54,7 +75,32 @@ class Authcontroller extends Controller
         return response()->json(['message' => 'Code de vérification envoyé par e-mail']);
     }
 
-
+    /**
+     * @OA\Post(
+     *     path="/api/usecases/auth/verify",
+     *     summary="Vérification du code",
+     *     tags={"Authentification"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
+     *             @OA\Property(property="code", type="string", example="ABC123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Adresse e-mail vérifiée avec succès et utilisateur créé"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Code de vérification incorrect"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Code de vérification expiré ou non trouvé"
+     *     )
+     * )
+     */
     public function verify(Request $request)
     {
         $request->validate([
@@ -96,9 +142,37 @@ class Authcontroller extends Controller
         return response()->json(['message' => 'Adresse e-mail vérifiée avec succès et utilisateur créé', 'user' => $user], 201);
     }
 
-
-
-   // methode de connexion
+    /**
+     * @OA\Post(
+     *     path="/api/usecases/auth/connexion",
+     *     summary="Connexion de l'utilisateur",
+     *     tags={"Authentification"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Access autorisé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Access autorisé"),
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string", example="Bearer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erreur de validation"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Access non autorisé"
+     *     )
+     * )
+     */
     public function connexion(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -110,9 +184,9 @@ class Authcontroller extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $credentials = request(['email','password']);
-        if(!Auth::attempt($credentials)){
-            return response()->json(['message'=>"Access non autorise"],401);
+        $credentials = request(['email', 'password']);
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message' => "Access non autorisé"], 401);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -125,19 +199,31 @@ class Authcontroller extends Controller
         ], 200);
     }
 
-
-
+    /**
+     * @OA\Post(
+     *     path="api/auth/deconnexion",
+     *     summary="Déconnexion de l'utilisateur",
+     *     tags={"Authentification"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Déconnexion réussie"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Aucun utilisateur connecté"
+     *     )
+     * )
+     */
     public function deconnexion()
     {
         // Récupérer l'utilisateur actuellement authentifié
         $user = Auth::user();
-        if($user instanceOf User){
+        if ($user instanceof User) {
             $user->tokens()->delete();
             Auth::logout();
             return response()->json(['message' => 'Déconnexion réussie'], 200);
-        }else{
-            return response()->json(['message' => 'Aucun utilisateur connecte'], 500);
+        } else {
+            return response()->json(['message' => 'Aucun utilisateur connecté'], 500);
         }
     }
-
 }
