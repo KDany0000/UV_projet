@@ -1919,10 +1919,10 @@
                 }
             }
         },
-        "/categories/{id}/projects": {
+        "/api/listing/categorie/projets/{id}": {
             "get": {
                 "tags": [
-                    "Categories"
+                    "GetElements"
                 ],
                 "summary": "Get projects by category ID",
                 "description": "Returns a list of projects associated with the given category ID",
@@ -1958,10 +1958,10 @@
                 }
             }
         },
-        "/projects/{id}/documents": {
+        "/api/listing/projet/documents/{id}": {
             "get": {
                 "tags": [
-                    "Projects"
+                    "GetElements"
                 ],
                 "summary": "Get documents by project ID",
                 "description": "Returns a list of documents associated with the given project ID",
@@ -1997,10 +1997,10 @@
                 }
             }
         },
-        "/levels/{id}/projects": {
+        "/api/listing/niveau/projets/{id}": {
             "get": {
                 "tags": [
-                    "Levels"
+                    "GetElements"
                 ],
                 "summary": "Get projects by level ID",
                 "description": "Returns a list of projects associated with the given level ID",
@@ -2036,10 +2036,10 @@
                 }
             }
         },
-        "/users/{id}/projects": {
+        "/api/listing/user/projets/{id}": {
             "get": {
                 "tags": [
-                    "Users"
+                    "GetElements"
                 ],
                 "summary": "Get projects by user ID",
                 "description": "Returns a list of projects associated with the given user ID",
@@ -2075,10 +2075,10 @@
                 }
             }
         },
-        "/users/{id}/documents": {
+        "/api/listing/user/documents/{id}": {
             "get": {
                 "tags": [
-                    "Users"
+                    "GetElements"
                 ],
                 "summary": "Get documents by user ID",
                 "description": "Returns a list of documents associated with the given user ID",
@@ -2817,24 +2817,24 @@
             "description": "Gestion des mots de passe"
         },
         {
-            "name": "Categories",
-            "description": "Categories"
+            "name": "GetElements",
+            "description": "GetElements"
         },
         {
-            "name": "Projects",
-            "description": "Projects"
+            "name": "GetElements",
+            "description": "GetElements"
         },
         {
-            "name": "Levels",
-            "description": "Levels"
+            "name": "GetElements",
+            "description": "GetElements"
         },
         {
-            "name": "Users",
-            "description": "Users"
+            "name": "GetElements",
+            "description": "GetElements"
         },
         {
-            "name": "Users",
-            "description": "Users"
+            "name": "GetElements",
+            "description": "GetElements"
         },
         {
             "name": "Recherche",

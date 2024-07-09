@@ -131,8 +131,8 @@ Route::prefix('usecases')->group(function () {
     });
 
     Route::prefix('password')->controller(GestionMotDePasseController::class)->group(function(){
-        Route::post('sendEmailReset' , 'sendResetLinkEmail');
-        Route::post('resetPassword' , 'resetPassword');
+        Route::post('sendcode' , 'sendVerificationCode');
+        Route::post('reset' , 'reset');
     });
 
     Route::prefix('upload')->controller(FileUploadController::class)->group(function(){
@@ -144,14 +144,13 @@ Route::prefix('usecases')->group(function () {
 
 
     Route::prefix('search')->controller(RechercheController::class)->group(function(){
-        Route::get('/projets', 'searchProjects');
+        Route::get('/projets/categorie', 'search');
         Route::get('/documents', 'searchDocuments');
-        Route::get('/categories', 'searchCategories');
     });
 
     Route::prefix('listing')->controller(ListingController::class)->group(function(){
         Route::get('/categorie/projets/{id}', 'showProjects');
-        Route::get('/documents/{id}', 'ShowDocuments');
+        Route::get('/projet/documents/{id}', 'ShowDocuments');
         Route::get('/niveau/projets/{id}', 'ShowLevelProjects');
         Route::get('/user/documents/{id}', 'showUserDocuments');
         Route::get('/user/projets/{id}', 'showUserProjects');
