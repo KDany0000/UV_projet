@@ -9,9 +9,10 @@ use App\Http\Controllers\Ressources\TblFiliereController;
 use App\Http\Controllers\Ressources\TblNiveauController;
 use App\Http\Controllers\Ressources\TblProjetController;
 use App\Http\Controllers\Ressources\TblSuperviseurController;
+use App\Http\Controllers\Usecases\APIAcceuilController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Usecases\Authcontroller;
+use App\Http\Controllers\Usecases\AuthController;
 use App\Http\Controllers\Usecases\FileUploadController;
 use App\Http\Controllers\Usecases\GestionMotDePasseController;
 use App\Http\Controllers\Usecases\ListingController;
@@ -123,7 +124,7 @@ Route::prefix('ressources')->group(function () {
 Route::prefix('usecases')->group(function () {
     //toutes les routes des usecases
 
-    Route::prefix('auth')->controller(Authcontroller::class)->group(function(){
+    Route::prefix('auth')->controller(AuthController::class)->group(function(){
         Route::post('inscription' , 'inscription')->middleware('web');
         Route::post('connexion' ,  'connexion');
         Route::post('verification' ,  'sendVerificationCode')->middleware('web');
@@ -155,6 +156,12 @@ Route::prefix('usecases')->group(function () {
         Route::get('/user/documents/{id}', 'showUserDocuments');
         Route::get('/user/projets/{id}', 'showUserProjects');
 
+    });
+
+
+    Route::prefix('acceuil')->controller(APIAcceuilController::class)->group(function(){
+        Route::get('/categories', 'index');
+        Route::get('/projets', 'listerProjets');
     });
 
 

@@ -47,8 +47,9 @@ class TblCategorie extends Model
 
     public function projets()
     {
-        return $this->hasMany(TblProjet::class);
+        return $this->hasMany(TblProjet::class, 'tbl_categorie_id');
     }
+
 
     // Définit les champs indexables pour Laravel Scout
     public function toSearchableArray()
