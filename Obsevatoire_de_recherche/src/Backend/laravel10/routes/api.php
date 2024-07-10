@@ -9,6 +9,7 @@ use App\Http\Controllers\Ressources\TblFiliereController;
 use App\Http\Controllers\Ressources\TblNiveauController;
 use App\Http\Controllers\Ressources\TblProjetController;
 use App\Http\Controllers\Ressources\TblSuperviseurController;
+use App\Http\Controllers\Usecases\AddController;
 use App\Http\Controllers\Usecases\APIAcceuilController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,8 @@ use App\Http\Controllers\Usecases\AuthController;
 use App\Http\Controllers\Usecases\FileUploadController;
 use App\Http\Controllers\Usecases\GestionMotDePasseController;
 use App\Http\Controllers\Usecases\ListingController;
+use App\Http\Controllers\Usecases\ProjectViewController;
+use App\Http\Controllers\Usecases\ProjetController;
 use App\Http\Controllers\Usecases\RechercheController;
 
 /*
@@ -164,5 +167,13 @@ Route::prefix('usecases')->group(function () {
         Route::get('/projets', 'listerProjets');
     });
 
+    Route::prefix('addview')->controller(ProjectViewController::class)->group(function(){
+        Route::get('/{id}', 'addView');
+    });
+
+    Route::prefix('add')->controller(AddController::class)->group(function(){
+        Route::post('doc/projet/{id}', 'ajouterDocument');
+    });
 
 });
+
