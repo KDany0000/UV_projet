@@ -9,13 +9,14 @@ use App\Models\TblProjet;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+
 class ListingController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/categories/{id}/projects",
+     *     path="/api/listing/categorie/projets/{id}",
      *     operationId="showProjects",
-     *     tags={"Categories"},
+     *     tags={"GetElements"},
      *     summary="Get projects by category ID",
      *     description="Returns a list of projects associated with the given category ID",
      *     @OA\Parameter(
@@ -50,9 +51,9 @@ class ListingController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/projects/{id}/documents",
+     *     path="/api/listing/projet/documents/{id}",
      *     operationId="showDocuments",
-     *     tags={"Projects"},
+     *     tags={"GetElements"},
      *     summary="Get documents by project ID",
      *     description="Returns a list of documents associated with the given project ID",
      *     @OA\Parameter(
@@ -87,9 +88,9 @@ class ListingController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/levels/{id}/projects",
+     *     path="/api/listing/niveau/projets/{id}",
      *     operationId="showLevelProjects",
-     *     tags={"Levels"},
+     *     tags={"GetElements"},
      *     summary="Get projects by level ID",
      *     description="Returns a list of projects associated with the given level ID",
      *     @OA\Parameter(
@@ -124,9 +125,9 @@ class ListingController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/users/{id}/projects",
+     *     path="/api/listing/user/projets/{id}",
      *     operationId="showUserProjects",
-     *     tags={"Users"},
+     *     tags={"GetElements"},
      *     summary="Get projects by user ID",
      *     description="Returns a list of projects associated with the given user ID",
      *     @OA\Parameter(
@@ -161,9 +162,9 @@ class ListingController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/users/{id}/documents",
+     *     path="/api/listing/user/documents/{id}",
      *     operationId="showUserDocuments",
-     *     tags={"Users"},
+     *     tags={"GetElements"},
      *     summary="Get documents by user ID",
      *     description="Returns a list of documents associated with the given user ID",
      *     @OA\Parameter(

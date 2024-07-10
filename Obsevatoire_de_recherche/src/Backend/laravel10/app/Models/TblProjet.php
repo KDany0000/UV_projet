@@ -80,8 +80,9 @@ class TblProjet extends Model
 
     public function categorie()
     {
-        return $this->belongsTo(TblCategorie::class);
+        return $this->belongsTo(TblCategorie::class, 'tbl_categorie_id');
     }
+
 
     public function documents()
     {

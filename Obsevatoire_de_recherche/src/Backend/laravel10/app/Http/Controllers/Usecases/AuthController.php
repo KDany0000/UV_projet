@@ -25,7 +25,6 @@ class AuthController extends Controller
      *             @OA\Property(property="nom_user", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
      *             @OA\Property(property="password", type="string", format="password", example="password123"),
-     *             @OA\Property(property="tel_user", type="string", example="123456789"),
      *             @OA\Property(property="tbl_filiere_id", type="integer", example="1")
      *         )
      *     ),
@@ -44,8 +43,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'nom_user' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email|max:255',
-            'password' => 'required|string|min:8',
-            'tel_user' => 'required|string|min:9|unique:users,tel_user',
+            'password' => 'required|string|min:4',
             'tbl_filiere_id' => 'required|exists:tbl_filieres,id'
         ]);
 
@@ -54,7 +52,7 @@ class AuthController extends Controller
         }
 
         // Enregistrez les informations de l'utilisateur dans la session avant la vérification de l'e-mail
-        $request->session()->put('user_data', $request->only(['nom_user', 'email', 'tel_user', 'password', 'tbl_filiere_id']));
+        $request->session()->put('user_data', $request->only(['nom_user', 'email', 'password', 'tbl_filiere_id']));
 
         // Envoyez le code de vérification à l'utilisateur
         return $this->sendVerificationCode($request->email);
@@ -131,7 +129,6 @@ class AuthController extends Controller
         $user = User::create([
             'nom_user' => $userData['nom_user'],
             'email' => $userData['email'],
-            'tel_user' => $userData['tel_user'],
             'tbl_filiere_id' => $userData['tbl_filiere_id'],
             'password' => bcrypt($userData['password']), // N'oubliez pas de hacher le mot de passe
         ]);
@@ -190,12 +187,14 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+        $username = $user->nom_user;
         $tokenResult = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
             'message' => 'Access autorisé',
             'access_token' => $tokenResult,
             'token_type' => 'Bearer',
+            'username' => $username
         ], 200);
     }
 

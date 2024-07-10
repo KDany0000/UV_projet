@@ -14,22 +14,23 @@ class RechercheController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/usecases/search/Projects",
-     *     summary="Rechercher des projets",
+     *     path="/api/usecases/search",
+     *     summary="Rechercher des projets et des catégories",
      *     tags={"Recherche"},
      *     @OA\Parameter(
      *         name="query",
      *         in="query",
      *         required=true,
      *         @OA\Schema(type="string"),
-     *         description="Texte de recherche pour les projets"
+     *         description="Texte de recherche pour les projets et les catégories"
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Liste des projets correspondants",
+     *         description="Liste des projets et des catégories correspondants",
      *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/TblProjet")
+     *             type="object",
+     *             @OA\Property(property="projets", type="array", @OA\Items(ref="#/components/schemas/TblProjet")),
+     *             @OA\Property(property="categories", type="array", @OA\Items(ref="#/components/schemas/TblCategorie"))
      *         )
      *     ),
      *     @OA\Response(
@@ -38,11 +39,13 @@ class RechercheController extends Controller
      *     )
      * )
      */
-    public function searchProjects(Request $request)
+    public function search(Request $request)
     {
         $query = $request->input('query');
+        $results = [];
 
-        $results = TblProjet::search($query, function ($client, $body) use ($query) {
+        // Search Projects
+        $projectResults = TblProjet::search($query, function ($client, $body) use ($query) {
             $params = [
                 'index' => 'tbl_projets',
                 'body'  => [
@@ -86,16 +89,63 @@ class RechercheController extends Controller
                 ],
             ];
 
-            $response = $client->search($params);
-
-            // Convertir la réponse en tableau
-            $responseArray = $response->asArray();
-
-            return $responseArray;
+            return $client->search($params)->asArray();
         })->get();
+
+        // Search Categories
+        $categoryResults = TblCategorie::search($query, function ($client, $body) use ($query) {
+            $params = [
+                'index' => 'tbl_categories',
+                'body'  => [
+                    'query' => [
+                        'bool' => [
+                            'should' => [
+                                [
+                                    'match' => [
+                                        'nom_cat' => [
+                                            'query' => $query,
+                                            'fuzziness' => 'AUTO',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'prefix' => [
+                                        'nom_cat' => [
+                                            'value' => $query,
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'match' => [
+                                        'descript_cat' => [
+                                            'query' => $query,
+                                            'fuzziness' => 'AUTO',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'prefix' => [
+                                        'descript_cat' => [
+                                            'value' => $query,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'minimum_should_match' => 1,
+                        ],
+                    ],
+                ],
+            ];
+
+            return $client->search($params)->asArray();
+        })->get();
+
+        $results['projets'] = $projectResults;
+        $results['categories'] = $categoryResults;
 
         return response()->json($results);
     }
+
 
     /**
      * @OA\Get(
@@ -145,91 +195,6 @@ class RechercheController extends Controller
                                 [
                                     'prefix' => [
                                         'nom_doc' => [
-                                            'value' => $query,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'minimum_should_match' => 1,
-                        ],
-                    ],
-                ],
-            ];
-
-            $response = $client->search($params);
-
-            // Convertir la réponse en tableau
-            $responseArray = $response->asArray();
-
-            return $responseArray;
-        })->get();
-
-        return response()->json($results);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/usecases/search/categories",
-     *     summary="Rechercher des catégories",
-     *     tags={"Recherche"},
-     *     @OA\Parameter(
-     *         name="query",
-     *         in="query",
-     *         required=true,
-     *         @OA\Schema(type="string"),
-     *         description="Texte de recherche pour les catégories"
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Liste des catégories correspondantes",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/TblCategorie")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Requête invalide"
-     *     )
-     * )
-     */
-    public function searchCategories(Request $request)
-    {
-        $query = $request->input('query');
-
-        $results = TblCategorie::search($query, function ($client, $body) use ($query) {
-            $params = [
-                'index' => 'tbl_categories',
-                'body'  => [
-                    'query' => [
-                        'bool' => [
-                            'should' => [
-                                [
-                                    'match' => [
-                                        'nom_cat' => [
-                                            'query' => $query,
-                                            'fuzziness' => 'AUTO',
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'prefix' => [
-                                        'nom_cat' => [
-                                            'value' => $query,
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'match' => [
-                                        'descript_cat' => [
-                                            'query' => $query,
-                                            'fuzziness' => 'AUTO',
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'prefix' => [
-                                        'descript_cat' => [
                                             'value' => $query,
                                         ],
                                     ],

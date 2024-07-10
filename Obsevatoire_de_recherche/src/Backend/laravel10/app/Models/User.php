@@ -27,7 +27,6 @@ class User extends Authenticatable
     protected $fillable = [
         'nom_user',
         'email',
-        'tel_user',
         'tbl_filiere_id',
         'password',
     ];
@@ -52,7 +51,7 @@ class User extends Authenticatable
         return $this->belongsToMany(TblCollaborateur::class, 'collaborateur_utilisateur');
     }
 
-    public function superviseurss()
+    public function superviseurs()
     {
         return $this->belongsToMany(TblSuperviseur::class, 'superviseur_utilisateur');
     }

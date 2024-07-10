@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('nom_user');
             $table->string('email')->unique();
-            $table->string('tel_user')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignIdFor(TblFiliere::class)->constrained();
             $table->string('password');
