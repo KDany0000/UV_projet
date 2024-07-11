@@ -48,6 +48,42 @@ class AddController extends Controller
     {
 
         // fais ta methode ici en suivant l'exemple precedent et en adaptant juste en fonction des collaborateur
+        // Validation des entrées
+        $validatedData = $request->validate([
+            'nom_collab' => 'required|string|max:255|unique:tbl_collaborateurs', // Enforce unique collaborator name
+            'email_collab' => 'required|email|unique:tbl_collaborateurs', // Enforce unique collaborator email
+            'role_collaborateur' => 'required|string|in:administrateur,editeur,consultant',
+        ]);
+
+        // Récupération du projet
+        $projet = TblProjet::findOrFail($id);
+
+        // Vérifier si l'utilisateur actuel est le propriétaire du projet
+        if ($projet->user_id != auth()->user()->id) {
+            return response()->json([
+                'message' => 'Vous n\'êtes pas autorisé à ajouter des collaborateurs à ce projet',
+            ], 403);
+        }
+
+        // Créer un nouvel enregistrement dans la table tbl_collaborateurs
+        $collaborateur = TblCollaborateur::create([
+            'nom_collab' => $validatedData['nom_collab'],
+            'email_collab' => $validatedData['email_collab'],
+        ]);
+        // Associer le collaborateur au projet
+        $collaborateurProjet = new TblProjetCollaborateur([
+            'tbl_projet_id' => $projet->id,
+            'user_id' => $collaborateur->id, // Use collaborator ID from tbl_collaborateurs table
+            'role' => $validatedData['role_collaborateur'],
+        ]);
+        $collaborateurProjet->save();
+
+        // Envoyer un email de notification au collaborateur (optionnel)
+        // ... (same as before)
+
+        return response()->json([
+            'message' => 'Collaborateur ajouté avec succès',
+        ], 201);
     }
 
 }
