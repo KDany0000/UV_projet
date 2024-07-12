@@ -188,13 +188,15 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
         $username = $user->nom_user;
+        $role = $user->role;
         $tokenResult = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
             'message' => 'Access autorisé',
             'access_token' => $tokenResult,
             'token_type' => 'Bearer',
-            'username' => $username
+            'username' => $username,
+            'role' => $role
         ], 200);
     }
 
