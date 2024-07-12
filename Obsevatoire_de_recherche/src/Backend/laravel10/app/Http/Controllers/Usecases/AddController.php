@@ -44,10 +44,10 @@ class AddController extends Controller
         ], 201);
     }
 
-    public function ajouterCollaborateur(Request $request, $id)
-    {
+    // public function ajouterCollaborateur(Request $request, $id)
+    // {
 
-        // fais ta methode ici en suivant l'exemple precedent et en adaptant juste en fonction des collaborateur
-    }
+    //     // fais ta methode ici en suivant l'exemple precedent et en adaptant juste en fonction des collaborateur
+    // }
 
 }

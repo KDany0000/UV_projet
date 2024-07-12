@@ -17,6 +17,7 @@ use App\Http\Controllers\Usecases\AuthController;
 use App\Http\Controllers\Usecases\FileUploadController;
 use App\Http\Controllers\Usecases\GestionMotDePasseController;
 use App\Http\Controllers\Usecases\ListingController;
+use App\Http\Controllers\Usecases\ProfileController;
 use App\Http\Controllers\Usecases\ProjectViewController;
 use App\Http\Controllers\Usecases\ProjetController;
 use App\Http\Controllers\Usecases\RechercheController;
@@ -36,11 +37,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 
 
+
 });
 Route::group(['middleware' => ['auth:sanctum']] , function(){
     Route::prefix('auth')->controller(Authcontroller::class)->group(function(){
         Route::post('deconnexion' ,  'deconnexion');
     });
+
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::post('/profile', [ProfileController::class, 'update']);
 
 });
 

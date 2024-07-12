@@ -17,5 +17,10 @@ class FiliereSeeder extends Seeder
             'nom_fil'=>'Informatique',
             'tbl_faculte_id'=>'1',
         ]);
+
+        TblFiliere::create([
+            'nom_fil'=>'Mathematique',
+            'tbl_faculte_id'=>'1',
+        ]);
     }
 }
