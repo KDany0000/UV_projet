@@ -170,6 +170,7 @@ Route::prefix('usecases')->group(function () {
     Route::prefix('acceuil')->controller(APIAcceuilController::class)->group(function(){
         Route::get('/categories', 'index');
         Route::get('/projets', 'listerProjets');
+        Route::get('/projets/ordre', 'listerProjetsParDate');
     });
 
     Route::prefix('addview')->controller(ProjectViewController::class)->group(function(){

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->text('descript_projet');
             $table->unsignedBigInteger('tbl_niveau_id');
             $table->integer('views')->default(0);
+            $table->string('image');
+            $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+            $table->enum('type', ['Projet', 'Memoire', 'Article'])->default('Projet');
             $table->foreign('tbl_niveau_id')->references('id')->on('tbl_niveaux')->onDelete('cascade');
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(TblCategorie::class)->constrained();

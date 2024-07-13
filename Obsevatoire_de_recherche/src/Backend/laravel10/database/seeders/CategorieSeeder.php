@@ -14,28 +14,33 @@ class CategorieSeeder extends Seeder
     public function run(): void
     {
         TblCategorie::create([
-            'nom_cat'=>'article',
-            'descript_cat'=>'gestion des articles de chercheurs',
+            'nom_cat'=>'Intelligence Artificielle (IA)',
+            'descript_cat'=>'Utilisation d algorithmes et de modèles pour simuler l intelligence humaine et automatiser des tâches complexes.',
         ]);
 
         TblCategorie::create([
-            'nom_cat'=>'Memoire',
-            'descript_cat'=>'gestion des Memoires de chercheurs',
+            'nom_cat'=>'Cyber Sécurité',
+            'descript_cat'=>'Protection des systèmes informatiques et des données contre les cyberattaques et les accès non autorisés.',
         ]);
 
         TblCategorie::create([
-            'nom_cat'=>'projets',
-            'descript_cat'=>'gestion des projets de chercheurs',
+            'nom_cat'=>'Blockchain',
+            'descript_cat'=>'Technologie de registre distribué garantissant la sécurité, la transparence et l immuabilité des transactions.',
         ]);
 
         TblCategorie::create([
-            'nom_cat'=>'projets de cycle 1',
-            'descript_cat'=>'gestion des projets de cycle  1 de chercheurs',
+            'nom_cat'=>'Réseau',
+            'descript_cat'=>'Conception et gestion des infrastructures de communication pour assurer la connectivité et l échange de données.',
         ]);
 
         TblCategorie::create([
-            'nom_cat'=>'projets de cycle 2',
-            'descript_cat'=>'gestion des projets de cycle  1 de chercheurs',
+            'nom_cat'=>'Data Science',
+            'descript_cat'=>'Extraction de connaissances et d insights à partir de grandes quantités de données via des techniques analytiques et statistiques.',
+        ]);
+
+        TblCategorie::create([
+            'nom_cat'=>'Génie Logiciel',
+            'descript_cat'=>'Développement, maintenance et gestion de systèmes logiciels pour répondre aux besoins spécifiques des utilisateurs.',
         ]);
     }
 }

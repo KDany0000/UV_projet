@@ -35,6 +35,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DocumentSeeder::class);
 
 
-        TblProjet::factory()->count(10)->create();
+        //TblProjet::factory()->count(10)->create();
     }
 }

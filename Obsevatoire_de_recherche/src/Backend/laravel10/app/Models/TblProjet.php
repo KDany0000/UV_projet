@@ -67,6 +67,7 @@ class TblProjet extends Model
         'tbl_categorie_id',
         'user_id',
         'views',
+        'image',
     ];
 
     public function user()

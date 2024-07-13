@@ -6,9 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\TblProjet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Services\FileUploadService;
 
 class TblProjetController extends Controller
 {
+
+    private $fileUploadService;
+
+    public function __construct(FileUploadService $fileUploadService)
+    {
+        $this->fileUploadService = $fileUploadService;
+    }
+
     /**
      * @OA\Get(
      *     path="/api/ressources/projets",
@@ -55,11 +64,14 @@ class TblProjetController extends Controller
             'tbl_niveau_id' => 'required|exists:tbl_niveaux,id',
             'user_id' => 'required|exists:users,id',
             'tbl_categorie_id' => 'required|exists:tbl_categories,id',
+            'image' => 'required|image|max:2048', 
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
+
+        $imageUrl = $this->fileUploadService->uploadFile($request->file('image'), 'public/images');
 
         $projet = TblProjet::create([
             'titre_projet' => $request->titre_projet,
@@ -67,6 +79,7 @@ class TblProjetController extends Controller
             'tbl_niveau_id' => $request->tbl_niveau_id,
             'user_id' => $request->user_id,
             'tbl_categorie_id' => $request->tbl_categorie_id,
+            'image' => $imageUrl,
         ]);
 
         return response()->json($projet, 201);
@@ -138,6 +151,7 @@ class TblProjetController extends Controller
             'tbl_niveau_id' => 'required',
             'user_id' => 'required',
             'tbl_categorie_id' => 'required',
+            'image' => 'nullable|image|max:2048', // Validation optionnelle de l'image
         ]);
 
         if ($validator->fails()) {
@@ -150,6 +164,12 @@ class TblProjetController extends Controller
         $projet->tbl_niveau_id = $request->tbl_niveau_id;
         $projet->user_id = $request->user_id;
         $projet->tbl_categorie_id = $request->tbl_categorie_id;
+
+        if ($request->hasFile('image')) {
+            $imageUrl = $this->fileUploadService->uploadFile($request->file('image'), 'public/images');
+            $projet->image = $imageUrl;
+        }
+
         $projet->save();
 
         return response()->json($projet);
