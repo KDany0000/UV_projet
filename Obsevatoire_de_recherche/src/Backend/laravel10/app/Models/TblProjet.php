@@ -77,7 +77,7 @@ class TblProjet extends Model
 
     public function niveau()
     {
-        return $this->belongsTo(TblNiveau::class);
+        return $this->belongsTo(TblNiveau::class, 'tbl_niveau_id');
     }
 
     public function categorie()

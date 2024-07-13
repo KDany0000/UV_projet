@@ -41,7 +41,7 @@ class TblNiveau extends Model
 
     public function projets()
     {
-        return $this->hasMany(TblProjet::class);
+        return $this->hasMany(TblProjet::class, 'tbl_niveau_id');
     }
 
     /**

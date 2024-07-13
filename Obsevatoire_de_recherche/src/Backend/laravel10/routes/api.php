@@ -141,7 +141,8 @@ Route::prefix('usecases')->group(function () {
 
     Route::prefix('password')->controller(GestionMotDePasseController::class)->group(function(){
         Route::post('sendcode' , 'sendVerificationCode');
-        Route::post('reset' , 'reset');
+        Route::post('verificationcode' , 'verifyCode');
+        Route::post('reset' , 'resetPassword');
     });
 
     Route::prefix('upload')->controller(FileUploadController::class)->group(function(){

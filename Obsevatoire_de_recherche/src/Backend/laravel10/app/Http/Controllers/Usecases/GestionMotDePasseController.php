@@ -67,6 +67,55 @@ class GestionMotDePasseController extends Controller
 
     /**
      * @OA\Post(
+     *     path="/api/usecases/password/verifyCode",
+     *     summary="Vérifier le code de vérification pour réinitialisation du mot de passe",
+     *     tags={"Gestion des mots de passe"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", format="email", description="Adresse email de l'utilisateur"),
+     *             @OA\Property(property="verification_code", type="string", description="Code de vérification")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Code de vérification valide",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The verification code is valid.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Code de vérification invalide ou expiré",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The verification code is invalid or has expired.")
+     *         )
+     *     )
+     * )
+     */
+    public function verifyCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'verification_code' => 'required',
+        ]);
+
+        // Retrieve the record from the database
+        $passwordReset = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->where('token', $request->verification_code)
+            ->first();
+
+        // Check if the verification code is valid and not expired (e.g., 60 minutes)
+        if (!$passwordReset || Carbon::parse($passwordReset->created_at)->addMinutes(60)->isPast()) {
+            return response()->json(['message' => 'The verification code is invalid or has expired.'], 422);
+        }
+
+        return response()->json(['message' => 'The verification code is valid.']);
+    }
+
+    /**
+     * @OA\Post(
      *     path="/api/usecases/password/resetpassword",
      *     summary="Réinitialiser le mot de passe avec le code de vérification",
      *     tags={"Gestion des mots de passe"},
@@ -95,7 +144,7 @@ class GestionMotDePasseController extends Controller
      *     )
      * )
      */
-    public function reset(Request $request)
+    public function resetPassword(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -135,4 +184,3 @@ class GestionMotDePasseController extends Controller
     }
 
 }
-
