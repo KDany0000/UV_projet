@@ -33,7 +33,7 @@ class TblProjetController extends Controller
     public function index()
     {
         // Récupérer tous les projets avec les informations de l'utilisateur associé
-        $projets = TblProjet::with('user')->get();
+        $projets = TblProjet::with('user','niveau','categorie')->get();
     
         // Transformer les projets pour inclure les attributs souhaités
         $resultats = $projets->map(function($projet) {
@@ -44,8 +44,11 @@ class TblProjetController extends Controller
                 'image' => $projet->image,
                 'status' => $projet->status,
                 'nom_utilisateur' => $projet->user->nom_user,
+                'niveau'=>$projet->niveau->code_niv,
+                'nom_categorie'=>$projet->categorie->nom_cat,
                 'created_at' => $projet->created_at,
                 'updated_at' => $projet->updated_at,
+
             ];
         });
     
