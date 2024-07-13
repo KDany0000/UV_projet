@@ -14,7 +14,56 @@ class NiveauSeeder extends Seeder
     public function run(): void
     {
         TblNiveau::create([
-            'code_niv'=> 'Inf 1',
+            'code_niv'=> 'Informatique 1',
         ]);
+
+        TblNiveau::create([
+            'code_niv'=> 'Informatique 2',
+        ]);
+
+        TblNiveau::create([
+            'code_niv'=> 'Informatique 3',
+        ]);
+        
+        TblNiveau::create([
+            'code_niv'=> 'Informatique 4',
+        ]);
+
+        TblNiveau::create([
+            'code_niv'=> 'informatique 5',
+        ]);
+        
+
+        TblNiveau::create([
+            'code_niv'=> 'Mathematique 1',
+        ]);
+
+        TblNiveau::create([
+            'code_niv'=> 'Mathematique 2',
+        ]);
+
+        TblNiveau::create([
+            'code_niv'=> 'Mathematique 3',
+        ]);
+        
+        TblNiveau::create([
+            'code_niv'=> 'Mathematique 4',
+        ]);
+
+        TblNiveau::create([
+            'code_niv'=> 'Mathematique 5',
+        ]);
+        
+
+        TblNiveau::create([
+            'code_niv'=> 'Doctorat Math',
+        ]);
+        
+        TblNiveau::create([
+            'code_niv'=> 'Doctorat Inf',
+        ]);
+
+
+
     }
 }

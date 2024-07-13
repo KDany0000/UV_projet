@@ -26,6 +26,7 @@ class TblProjetFactory extends Factory
         return [
             'titre_projet' => $this->faker->unique()->realTextBetween(100,200,1),
             'descript_projet' => $this->faker->realTextBetween(1000,10000,1),
+            'image'=>$this->faker->filePath(),
             'tbl_niveau_id' => TblNiveau::inRandomOrder()->first()->id,
             'user_id' => User::inRandomOrder()->first()->id,
             'tbl_categorie_id' => TblCategorie::inRandomOrder()->first()->id,
