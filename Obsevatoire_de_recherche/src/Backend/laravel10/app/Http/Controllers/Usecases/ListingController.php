@@ -7,6 +7,7 @@ use App\Models\TblCategorie;
 use App\Models\TblNiveau;
 use App\Models\TblProjet;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 
@@ -196,4 +197,21 @@ class ListingController extends Controller
         // Retourner les documents
         return response()->json($documents);
     }
+
+    public function countProjectsByStatus()
+{
+    // Récupérer les comptes de projets par statut
+    $projectCounts = TblProjet::select('status', DB::raw('count(*) as total'))
+                                ->groupBy('status')
+                                ->get();
+
+    // Transformer les résultats pour inclure les statuts et les comptes correspondants
+    $resultats = $projectCounts->mapWithKeys(function($project) {
+        return [$project->status => $project->total];
+    });
+
+    // Retourner les résultats sous forme de tableau
+    return response()->json([$resultats]);
+}
+
 }
