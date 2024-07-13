@@ -148,7 +148,7 @@ class GestionMotDePasseController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'password' => 'required|min:4',
             'verification_code' => 'required',
         ]);
 
