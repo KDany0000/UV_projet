@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom_cat')->unique();
             $table->text('descript_cat');
+            $table->string('icone');
             $table->timestamps();
         });
     }

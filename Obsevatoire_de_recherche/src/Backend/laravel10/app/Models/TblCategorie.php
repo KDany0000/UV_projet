@@ -43,6 +43,7 @@ class TblCategorie extends Model
     protected $fillable = [
         'nom_cat',
         'descript_cat',
+        'icone'
     ];
 
     public function projets()
