@@ -56,8 +56,11 @@ class APIAcceuilController extends Controller
                 'image' => $projet->image,
                 'nom_categorie' => $projet->categorie->nom_cat,
                 'nom_utilisateur' => $projet->user->nom_user,
+                'email' => $projet->user->email,
                 'filiere'=>$projet->user->filiere->nom_fil,
                 'niveau'=>$projet->niveau->code_niv,
+                'type' => $projet->type,
+                'views' => $projet->views,
                 'created_at' => $projet->created_at,
                 'updated_at' => $projet->updated_at,
             ];

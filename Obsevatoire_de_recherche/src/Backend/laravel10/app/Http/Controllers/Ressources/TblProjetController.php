@@ -34,7 +34,7 @@ class TblProjetController extends Controller
     {
         // Récupérer tous les projets avec les informations de l'utilisateur associé
         $projets = TblProjet::with('user','niveau','categorie')->get();
-    
+
         // Transformer les projets pour inclure les attributs souhaités
         $resultats = $projets->map(function($projet) {
             return [
@@ -54,7 +54,7 @@ class TblProjetController extends Controller
 
             ];
         });
-    
+
         // Retourner les résultats en JSON
         return response()->json($resultats);
     }
@@ -87,7 +87,7 @@ class TblProjetController extends Controller
             'tbl_niveau_id' => 'required|exists:tbl_niveaux,id',
             'user_id' => 'required|exists:users,id',
             'tbl_categorie_id' => 'required|exists:tbl_categories,id',
-            'image' => 'required|image|max:2048', 
+            'image' => 'required|image|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -174,7 +174,7 @@ class TblProjetController extends Controller
             'tbl_niveau_id' => 'required',
             'user_id' => 'required',
             'tbl_categorie_id' => 'required',
-            'image' => 'nullable|image|max:2048', // Validation optionnelle de l'image
+            'image' => 'nullable|image|max:2048',
         ]);
 
         if ($validator->fails()) {

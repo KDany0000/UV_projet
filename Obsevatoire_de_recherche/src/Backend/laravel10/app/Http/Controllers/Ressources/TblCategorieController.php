@@ -6,9 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\TblCategorie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Services\FileUploadService;
 
 class TblCategorieController extends Controller
 {
+
+    private $fileUploadService;
+
+    public function __construct(FileUploadService $fileUploadService)
+    {
+        $this->fileUploadService = $fileUploadService;
+    }
     /**
      * @OA\Get(
      *     path="/api/ressources/categories",
@@ -61,15 +69,20 @@ class TblCategorieController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nom_cat'=>'required|unique:tbl_categories,nom_cat|max:255',
-            'descript_cat'=>'required|unique:tbl_categories,descript_cat|max:255'
+            'descript_cat'=>'required|unique:tbl_categories,descript_cat|max:255',
+            'icone' => 'required|mimes:svg,png,ico',
+
         ]);
         if($validator->fails()){
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
+        $iconeUrl = $this->fileUploadService->uploadFile($request->file('icone'), 'public/icones');
+
         $categorie = TblCategorie::create([
             'nom_cat' => $request->nom_cat,
             "descript_cat"=>$request->descript_cat,
+            'icone' => $iconeUrl,
 
         ]);
         return response()->json($categorie);
@@ -150,6 +163,7 @@ class TblCategorieController extends Controller
         $validator = Validator::make($request->all(), [
             'nom_cat'=>'required|max:255',
             'descript_cat'=>'required',
+            'icone' => 'required|mimes:svg,png,ico',
         ]);
         if($validator->fails()){
             return response()->json(['errors' => $validator->errors()], 400);
@@ -158,6 +172,11 @@ class TblCategorieController extends Controller
         $categorie = TblCategorie::where('id', $id)->firstOrFail();
         $categorie->nom_cat = $request->nom_cat;
         $categorie->descript_cat = $request->descript_cat;
+
+        if ($request->hasFile('icone')) {
+            $iconeUrl = $this->fileUploadService->uploadFile($request->file('icone'), 'public/icones');
+            $categorie->icone = $iconeUrl;
+        }
 
         $categorie->save();
 
