@@ -143,7 +143,7 @@ class RechercheController extends Controller
         $results['projets'] = $projectResults;
         $results['categories'] = $categoryResults;
 
-        return response()->json($results);
+        return response()->json([$results]);
     }
 
 
@@ -216,4 +216,79 @@ class RechercheController extends Controller
 
         return response()->json($results);
     }
+
+
+
+    public function search2(Request $request)
+{
+    $query = $request->input('query');
+    $results = [];
+
+    // Search Projects
+    $projectResults = TblProjet::search($query, function ($client, $body) use ($query) {
+        $params = [
+            'index' => 'tbl_projets',
+            'body'  => [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            [
+                                'match' => [
+                                    'titre_projet' => [
+                                        'query' => $query,
+                                        'fuzziness' => 'AUTO',
+                                    ],
+                                ],
+                            ],
+                            [
+                                'match' => [
+                                    'descript_projet' => [
+                                        'query' => $query,
+                                        'fuzziness' => 'AUTO',
+                                    ],
+                                ],
+                            ],
+                            [
+                                'prefix' => [
+                                    'titre_projet' => [
+                                        'value' => $query,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'prefix' => [
+                                    'descript_projet' => [
+                                        'value' => $query,
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'minimum_should_match' => 1,
+                    ],
+                ],
+            ],
+        ];
+
+        return $client->search($params)->asArray();
+    })->get();
+
+    $projects = $projectResults->map(function ($project) {
+        return [
+            'id' => $project->id,
+            'titre_projet' => $project->titre_projet,
+            'nom_categorie' => $project->categorie->nom_cat,
+            'filiere' => $project->user->filiere->nom_fil,
+            'niveau' => $project->niveau->code_niv,
+            'description' => $project->descript_projet,
+            'image' =>  $project->image,
+            'date_creation' => $project->created_at->format('Y-m-d'),
+            // Ajoutez d'autres propriétés nécessaires
+        ];
+    });
+
+    $results['projets'] = $projects;
+
+    return response()->json($results);
+}
+
 }

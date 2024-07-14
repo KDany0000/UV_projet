@@ -32,7 +32,7 @@ class ProjetSeeder extends Seeder
             'tbl_niveau_id'=>'1',
             'tbl_categorie_id'=>'1',
         ]);
-    
+
 
     TblProjet::create([
         'titre_projet'=>'Système de détection d intrusion',
@@ -270,6 +270,107 @@ class ProjetSeeder extends Seeder
         'tbl_niveau_id'=>'2',
         'tbl_categorie_id'=>'5',
     ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Analyse des tendances de marché',
+        'descript_projet' => 'Développement d’un outil d’analyse des tendances du marché utilisant des algorithmes de machine learning pour prédire les mouvements futurs.',
+        'image' => '/storage/images/img1.jpeg',
+        'status' => 'Approved',
+        'user_id' => '1',
+        'tbl_niveau_id' => '3',
+        'tbl_categorie_id' => '2',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Système de recommandation de films',
+        'descript_projet' => 'Création d’un système de recommandation de films basé sur les préférences de l’utilisateur et l’historique de visionnage.',
+        'image' => '/storage/images/img2.jpeg',
+        'status' => 'Rejected',
+        'user_id' => '2',
+        'tbl_niveau_id' => '5',
+        'tbl_categorie_id' => '4',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Application de gestion de tâches',
+        'descript_projet' => 'Développement d’une application mobile pour la gestion des tâches et des projets avec des fonctionnalités de collaboration en temps réel.',
+        'image' => '/storage/images/img3.jpeg',
+        'status' => 'Pending',
+        'user_id' => '3',
+        'tbl_niveau_id' => '7',
+        'tbl_categorie_id' => '5',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Plateforme de e-commerce',
+        'descript_projet' => 'Conception d’une plateforme de commerce électronique avec des options de paiement sécurisées et une interface utilisateur intuitive.',
+        'image' => '/storage/images/img4.jpeg',
+        'status' => 'Approved',
+        'user_id' => '4',
+        'tbl_niveau_id' => '8',
+        'tbl_categorie_id' => '1',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Système de gestion de la santé',
+        'descript_projet' => 'Développement d’un système intégré de gestion des dossiers de santé pour les hôpitaux et les cliniques.',
+        'image' => '/storage/images/img5.jpeg',
+        'status' => 'Rejected',
+        'user_id' => '5',
+        'tbl_niveau_id' => '10',
+        'tbl_categorie_id' => '6',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Détection d’intrusion dans les réseaux',
+        'descript_projet' => 'Mise en place d’un système de détection d’intrusion pour protéger les réseaux d’entreprise contre les cyberattaques.',
+        'image' => '/storage/images/img6.jpeg',
+        'status' => 'Pending',
+        'user_id' => '1',
+        'tbl_niveau_id' => '11',
+        'tbl_categorie_id' => '4',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Application de fitness',
+        'descript_projet' => 'Développement d’une application de suivi de la condition physique et de la nutrition avec des fonctionnalités de coaching personnalisé.',
+        'image' => '/storage/images/img7.jpeg',
+        'status' => 'Approved',
+        'user_id' => '2',
+        'tbl_niveau_id' => '9',
+        'tbl_categorie_id' => '5',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Système de réservation en ligne',
+        'descript_projet' => 'Création d’un système de réservation en ligne pour les hôtels et les restaurants avec une gestion intégrée des disponibilités.',
+        'image' => '/storage/images/img8.jpeg',
+        'status' => 'Rejected',
+        'user_id' => '3',
+        'tbl_niveau_id' => '4',
+        'tbl_categorie_id' => '3',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Reconnaissance faciale',
+        'descript_projet' => 'Développement d’un système de reconnaissance faciale pour améliorer la sécurité et l’accès aux bâtiments.',
+        'image' => '/storage/images/img9.jpeg',
+        'status' => 'Pending',
+        'user_id' => '4',
+        'tbl_niveau_id' => '6',
+        'tbl_categorie_id' => '6',
+    ]);
+
+    TblProjet::create([
+        'titre_projet' => 'Analyse des sentiments sur les réseaux sociaux',
+        'descript_projet' => 'Mise en place d’un outil d’analyse des sentiments pour surveiller et analyser les opinions sur les réseaux sociaux.',
+        'image' => '/storage/images/img10.jpeg',
+        'status' => 'Approved',
+        'user_id' => '5',
+        'tbl_niveau_id' => '2',
+        'tbl_categorie_id' => '5',
+    ]);
+
 
 }
 

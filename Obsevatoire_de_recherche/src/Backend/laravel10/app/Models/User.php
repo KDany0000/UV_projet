@@ -33,7 +33,7 @@ class User extends Authenticatable
 
     public function filiere()
     {
-        return $this->belongsTo(TblFiliere::class);
+        return $this->belongsTo(TblFiliere::class, 'tbl_filiere_id');
     }
 
     public function projets()

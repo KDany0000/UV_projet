@@ -154,7 +154,8 @@ Route::prefix('usecases')->group(function () {
 
 
     Route::prefix('search')->controller(RechercheController::class)->group(function(){
-        Route::get('/projets/categorie', 'search');
+        Route::post('/projets/categorie', 'search');
+        Route::post('/projets', 'search2');
         Route::get('/documents', 'searchDocuments');
     });
 
@@ -165,7 +166,7 @@ Route::prefix('usecases')->group(function () {
         Route::get('/user/documents/{id}', 'showUserDocuments');
         Route::get('/user/projets/{id}', 'showUserProjects');
         Route::get('/count/', 'countProjectsByStatus');
-        
+
 
     });
 
