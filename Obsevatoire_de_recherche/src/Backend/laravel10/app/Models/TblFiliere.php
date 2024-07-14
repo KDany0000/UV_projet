@@ -51,7 +51,7 @@ class TblFiliere extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(User::class, 'tbl_filiere_id');
     }
 
     /**

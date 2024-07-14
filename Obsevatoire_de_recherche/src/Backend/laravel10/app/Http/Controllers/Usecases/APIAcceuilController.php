@@ -15,11 +15,11 @@ class APIAcceuilController extends Controller
         $categories = TblCategorie::withCount(['projets' => function($query) {
             $query->where('status', 'Approved');
         }])->get();
-    
+
         // Retourner les résultats en JSON
         return response()->json($categories);
     }
-    
+
 
     public function listerProjets()
     {
@@ -43,11 +43,11 @@ class APIAcceuilController extends Controller
 
     public function listerProjetsParDate()
     {
-        $projets = TblProjet::with(['categorie', 'user'])
+        $projets = TblProjet::with(['categorie', 'user','niveau'])
                             ->where('status', 'Approved')
                             ->orderBy('created_at', 'desc')
                             ->get();
-    
+
         $resultats = $projets->map(function($projet) {
             return [
                 'id' => $projet->id,
@@ -56,12 +56,14 @@ class APIAcceuilController extends Controller
                 'image' => $projet->image,
                 'nom_categorie' => $projet->categorie->nom_cat,
                 'nom_utilisateur' => $projet->user->nom_user,
+                'filiere'=>$projet->user->filiere->nom_fil,
+                'niveau'=>$projet->niveau->code_niv,
                 'created_at' => $projet->created_at,
                 'updated_at' => $projet->updated_at,
             ];
         });
-    
+
         return response()->json($resultats);
     }
-    
+
 }
