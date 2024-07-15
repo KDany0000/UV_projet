@@ -189,6 +189,22 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         $username = $user->nom_user;
         $role = $user->role;
+        $projets = $user->projets()->with('niveau', 'categorie')->get(['titre_projet', 'descript_projet', 'type', 'views', 'status' ,'image', 'tbl_niveau_id', 'tbl_categorie_id', 'created_at']);
+
+        $projets = $projets->map(function($projet) {
+            return [
+                'titre' => $projet->titre_projet,
+                'description' => $projet->descript_projet,
+                'type' => $projet->type,
+                'views' => $projet->views,
+                'image' => $projet->image,
+                'status' => $projet->status,
+                'niveau' => $projet->niveau->code_niv, 
+                'categorie' => $projet->categorie->nom_cat,
+                'created_at' => $projet->created_at, 
+            ];
+        });
+
         $tokenResult = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
@@ -196,7 +212,8 @@ class AuthController extends Controller
             'access_token' => $tokenResult,
             'token_type' => 'Bearer',
             'username' => $username,
-            'role' => $role
+            'role' => $role,
+            'projets' => $projets,
         ], 200);
     }
 
