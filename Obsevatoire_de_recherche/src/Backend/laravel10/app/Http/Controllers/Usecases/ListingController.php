@@ -150,16 +150,33 @@ class ListingController extends Controller
      * )
      */
     public function showUserProjects($id)
-    {
-        // Récupérer l'utilisateur par son ID
-        $user = User::findOrFail($id);
+{
+    // Récupérer l'utilisateur par son ID
+    $user = User::findOrFail($id);
 
-        // Récupérer les projets associés à cet utilisateur
-        $projets = $user->projets;
+    // Récupérer les projets associés à cet utilisateur avec leurs niveaux et catégories
+    $projets = $user->projets()->with(['niveau:id,code_niv', 'categorie:id,nom_cat'])->get();
 
-        // Retourner les projets
-        return response()->json($projets);
-    }
+    // Formater les projets pour inclure uniquement les noms des niveaux et catégories
+    $formattedProjets = $projets->map(function ($projet) {
+        return [
+               'titre' => $projet->titre_projet,
+                'description' => $projet->descript_projet,
+                'type' => $projet->type,
+                'views' => $projet->views,
+                'image' => $projet->image,
+                'status' => $projet->status,
+                'niveau' => $projet->niveau->code_niv,
+                'categorie' => $projet->categorie->nom_cat,
+                'created_at' => $projet->created_at,
+        ];
+    });
+
+    // Retourner les projets formatés
+    return response()->json($formattedProjets);
+}
+
+
 
     /**
      * @OA\Get(
