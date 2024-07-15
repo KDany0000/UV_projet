@@ -189,6 +189,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         $username = $user->nom_user;
         $role = $user->role;
+        $id = $user->id;
         $projets = $user->projets()->with('niveau', 'categorie')->get(['titre_projet', 'descript_projet', 'type', 'views', 'status' ,'image', 'tbl_niveau_id', 'tbl_categorie_id', 'created_at']);
 
         $projets = $projets->map(function($projet) {
@@ -199,9 +200,9 @@ class AuthController extends Controller
                 'views' => $projet->views,
                 'image' => $projet->image,
                 'status' => $projet->status,
-                'niveau' => $projet->niveau->code_niv, 
+                'niveau' => $projet->niveau->code_niv,
                 'categorie' => $projet->categorie->nom_cat,
-                'created_at' => $projet->created_at, 
+                'created_at' => $projet->created_at,
             ];
         });
 
@@ -213,6 +214,7 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'username' => $username,
             'role' => $role,
+            'id' => $id,
             'projets' => $projets,
         ], 200);
     }

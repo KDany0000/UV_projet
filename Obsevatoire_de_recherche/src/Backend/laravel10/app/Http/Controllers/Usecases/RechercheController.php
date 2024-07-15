@@ -39,112 +39,139 @@ class RechercheController extends Controller
      *     )
      * )
      */
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $results = [];
+    public function searchCategories(Request $request)
+{
+    $query = $request->input('query');
+    $results = [];
 
-        // Search Projects
-        $projectResults = TblProjet::search($query, function ($client, $body) use ($query) {
-            $params = [
-                'index' => 'tbl_projets',
-                'body'  => [
-                    'query' => [
-                        'bool' => [
-                            'should' => [
-                                [
-                                    'match' => [
-                                        'titre_projet' => [
-                                            'query' => $query,
-                                            'fuzziness' => 'AUTO',
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'match' => [
-                                        'descript_projet' => [
-                                            'query' => $query,
-                                            'fuzziness' => 'AUTO',
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'prefix' => [
-                                        'titre_projet' => [
-                                            'value' => $query,
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'prefix' => [
-                                        'descript_projet' => [
-                                            'value' => $query,
-                                        ],
+    // Recherche des catégories avec Elasticsearch via Scout
+    $categoryResults = TblCategorie::search($query, function ($client, $body) use ($query) {
+        $params = [
+            'index' => 'tbl_categories',
+            'body'  => [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            [
+                                'match' => [
+                                    'nom_cat' => [
+                                        'query' => $query,
+                                        'fuzziness' => 'AUTO',
                                     ],
                                 ],
                             ],
-                            'minimum_should_match' => 1,
-                        ],
-                    ],
-                ],
-            ];
-
-            return $client->search($params)->asArray();
-        })->get();
-
-        // Search Categories
-        $categoryResults = TblCategorie::search($query, function ($client, $body) use ($query) {
-            $params = [
-                'index' => 'tbl_categories',
-                'body'  => [
-                    'query' => [
-                        'bool' => [
-                            'should' => [
-                                [
-                                    'match' => [
-                                        'nom_cat' => [
-                                            'query' => $query,
-                                            'fuzziness' => 'AUTO',
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'prefix' => [
-                                        'nom_cat' => [
-                                            'value' => $query,
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'match' => [
-                                        'descript_cat' => [
-                                            'query' => $query,
-                                            'fuzziness' => 'AUTO',
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'prefix' => [
-                                        'descript_cat' => [
-                                            'value' => $query,
-                                        ],
+                            [
+                                'prefix' => [
+                                    'nom_cat' => [
+                                        'value' => $query,
                                     ],
                                 ],
                             ],
-                            'minimum_should_match' => 1,
+                            [
+                                'wildcard' => [
+                                    'nom_cat' => [
+                                        'value' => '*' . $query . '*',
+                                    ],
+                                ],
+                            ],
                         ],
+                        'minimum_should_match' => 1,
                     ],
                 ],
-            ];
+            ],
+        ];
 
-            return $client->search($params)->asArray();
-        })->get();
+        return $client->search($params)->asArray();
+    })->get();
 
-        $results['projets'] = $projectResults;
-        $results['categories'] = $categoryResults;
-
-        return response()->json([$results]);
+    // Charger les projets associés à chaque catégorie
+    foreach ($categoryResults as $category) {
+        $category->load(['projets.user.filiere', 'projets.niveau']);
     }
+
+    // Formater les résultats des catégories avec les détails des projets
+    $formattedCategories = $categoryResults->flatMap(function ($category) {
+        return $category->projets->filter(function ($project) {
+            return $project->status === 'Approved'; // Filtrer les projets approuvés
+        })->map(function ($project) {
+            return [
+                'titre_projet' => $project->titre_projet,
+                'nom_categorie' => $project->categorie->nom_cat,
+                'filiere' => optional($project->user->filiere)->nom_fil,
+                'niveau' => optional($project->niveau)->code_niv,
+                'description' => $project->descript_projet,
+                'image' => $project->image,
+                'date_creation' => $project->created_at->format('Y-m-d'),
+            ];
+        });
+    });
+
+    // Recherche des projets avec Elasticsearch via Scout
+    $projectResults = TblProjet::search($query, function ($client, $body) use ($query) {
+        $params = [
+            'index' => 'tbl_projets',
+            'body'  => [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            [
+                                'match' => [
+                                    'titre_projet' => [
+                                        'query' => $query,
+                                        'fuzziness' => 'AUTO',
+                                    ],
+                                ],
+                            ],
+                            [
+                                'prefix' => [
+                                    'titre_projet' => [
+                                        'value' => $query,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'wildcard' => [
+                                    'titre_projet' => [
+                                        'value' => '*' . $query . '*',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'minimum_should_match' => 1,
+                    ],
+                ],
+            ],
+        ];
+
+        return $client->search($params)->asArray();
+    })->get();
+
+    // Filtrer et formater les résultats des projets approuvés
+    $formattedProjects = $projectResults->filter(function ($project) {
+        return $project->status === 'Approved'; // Filtrer les projets approuvés
+    })->map(function ($project) {
+        return [
+            'titre_projet' => $project->titre_projet,
+            'nom_categorie' => $project->categorie->nom_cat,
+            'filiere' => optional($project->user->filiere)->nom_fil,
+            'niveau' => optional($project->niveau)->code_niv,
+            'description' => $project->descript_projet,
+            'image' => $project->image,
+            'date_creation' => $project->created_at->format('Y-m-d'),
+        ];
+    });
+
+    // Combiner les résultats des catégories et des projets
+    $results = $formattedCategories->merge($formattedProjects);
+
+    // Retourner les résultats au format JSON
+    return response()->json(['results' => $results]);
+}
+
+    
+
+
+
 
 
     /**

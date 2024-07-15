@@ -57,7 +57,7 @@ class TblFaculte extends Model
 
     public function filieres()
     {
-        return $this->hasMany(TblFiliere::class);
+        return $this->hasMany(TblFiliere::class, 'tbl_faculte_id');
     }
 
 
