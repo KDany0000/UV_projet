@@ -46,7 +46,7 @@ class TblFiliere extends Model
 
     public function faculte()
     {
-        return $this->belongsTo(TblFaculte::class);
+        return $this->belongsTo(TblFaculte::class, 'tbl_faculte_id');
     }
 
     public function users()

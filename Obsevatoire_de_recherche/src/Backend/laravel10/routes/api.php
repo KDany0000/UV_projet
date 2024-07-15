@@ -154,8 +154,8 @@ Route::prefix('usecases')->group(function () {
 
 
     Route::prefix('search')->controller(RechercheController::class)->group(function(){
-        Route::post('/projets/categorie', 'search');
-        Route::post('/projets', 'search2');
+        Route::post('/projets', 'searchCategories');
+        Route::post('/projet', 'search2');
         Route::get('/documents', 'searchDocuments');
     });
 

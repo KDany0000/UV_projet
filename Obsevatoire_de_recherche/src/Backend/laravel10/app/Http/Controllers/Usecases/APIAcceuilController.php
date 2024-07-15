@@ -8,17 +8,36 @@ use App\Models\TblCategorie;
 use App\Models\TblProjet;
 
 class APIAcceuilController extends Controller
-{
-    public function index()
+{public function index()
     {
-        // Récupérer toutes les catégories avec le nombre de projets approuvés associés
-        $categories = TblCategorie::withCount(['projets' => function($query) {
+        // Récupérer toutes les catégories avec le nombre de projets approuvés associés, et charger les relations nécessaires
+        $categories = TblCategorie::with(['projets' => function($query) {
+            $query->where('status', 'Approved')->with(['niveau', 'user.filiere.faculte']);
+        }])->withCount(['projets' => function($query) {
             $query->where('status', 'Approved');
         }])->get();
-
+    
+        // Formater les résultats pour inclure les détails des projets approuvés
+        $formattedCategories = $categories->map(function ($category) {
+            return [
+                'nom_cat' => $category->nom_cat,
+                'descript_cat' => $category->descript_cat,
+                'icone'=>$category->icone,
+                'projets_count' => $category->projets_count,
+                'details' => $category->projets->map(function ($project) {
+                    return [
+                        'filiere' => optional($project->user->filiere)->nom_fil,
+                        'faculte' => optional($project->user->filiere->faculte)->nom_fac,
+                        'niveau' => optional($project->niveau)->code_niv,
+                    ];
+                })
+            ];
+        });
+    
         // Retourner les résultats en JSON
-        return response()->json($categories);
+        return response()->json($formattedCategories);
     }
+    
 
 
     public function listerProjets()

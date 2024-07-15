@@ -18,9 +18,23 @@ return [
                     ],
                     'titre_projet' => [
                         'type' => 'text',
+                        'analyzer' => 'edge_ngram_analyzer',
+                        'search_analyzer' => 'standard',
                     ],
                     'descript_projet' => [
                         'type' => 'text',
+                        'analyzer' => 'edge_ngram_analyzer',
+                        'search_analyzer' => 'standard',
+                    ],
+                    'categorie' => [
+                        'type' => 'nested',
+                        'properties' => [
+                            'nom_cat' => [
+                                'type' => 'text',
+                                'analyzer' => 'edge_ngram_analyzer',
+                                'search_analyzer' => 'standard',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -31,9 +45,13 @@ return [
                     ],
                     'nom_doc' => [
                         'type' => 'text',
+                        'analyzer' => 'edge_ngram_analyzer',
+                        'search_analyzer' => 'standard',
                     ],
                     'resume' => [
                         'type' => 'text',
+                        'analyzer' => 'edge_ngram_analyzer',
+                        'search_analyzer' => 'standard',
                     ],
                 ],
             ],
@@ -42,8 +60,10 @@ return [
                     'id' => [
                         'type' => 'keyword',
                     ],
-                    'nom_categorie' => [
+                    'nom_cat' => [
                         'type' => 'text',
+                        'analyzer' => 'edge_ngram_analyzer',
+                        'search_analyzer' => 'standard',
                     ],
                 ],
             ],
@@ -52,6 +72,25 @@ return [
             'default' => [
                 'number_of_shards' => 1,
                 'number_of_replicas' => 0,
+                'analysis' => [
+                    'filter' => [
+                        'edge_ngram_filter' => [
+                            'type' => 'edge_ngram',
+                            'min_gram' => 1,
+                            'max_gram' => 20,
+                        ],
+                    ],
+                    'analyzer' => [
+                        'edge_ngram_analyzer' => [
+                            'type' => 'custom',
+                            'tokenizer' => 'standard',
+                            'filter' => [
+                                'lowercase',
+                                'edge_ngram_filter',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
