@@ -234,16 +234,12 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function deconnexion()
+    public function deconnexion(Request $request)
     {
-        // Récupérer l'utilisateur actuellement authentifié
-        $user = Auth::user();
-        if ($user instanceof User) {
-            $user->tokens()->delete();
-            Auth::logout();
-            return response()->json(['message' => 'Déconnexion réussie'], 200);
-        } else {
-            return response()->json(['message' => 'Aucun utilisateur connecté'], 500);
-        }
+        // Supprimer le jeton d'accès actuel de l'utilisateur
+        $request->user()->currentAccessToken()->delete();
+
+        // Réponse de succès
+        return response()->json(['message' => 'Déconnexion réussie.'], 200);
     }
 }

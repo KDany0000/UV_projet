@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Usecases\NotificationController;
 use App\Http\Controllers\Ressources\TblCategorieController;
 use App\Http\Controllers\Ressources\TblCollaborateurController;
 use App\Http\Controllers\Ressources\TblDocumentController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Usecases\FileUploadController;
 use App\Http\Controllers\Usecases\GestionMotDePasseController;
 use App\Http\Controllers\Usecases\ListingController;
 use App\Http\Controllers\Usecases\ProfileController;
+use App\Http\Controllers\Usecases\ProjectStatusController;
 use App\Http\Controllers\Usecases\ProjectViewController;
 use App\Http\Controllers\Usecases\ProjetController;
 use App\Http\Controllers\Usecases\RechercheController;
@@ -44,8 +46,14 @@ Route::group(['middleware' => ['auth:sanctum']] , function(){
         Route::post('deconnexion' ,  'deconnexion');
     });
 
-    Route::get('/profile', [ProfileController::class, 'show']);
-    Route::post('/profile', [ProfileController::class, 'update']);
+    Route::prefix('auth')->controller(NotificationController::class)->group(function(){
+        Route::get('notifications' ,  'getNotifications');
+        Route::post('notifications/read/{id}' ,  'markAsRead');
+        Route::post('notifications/read/all' ,  'markAllAsRead');
+    });
+
+    // Route::get('/profile', [ProfileController::class, 'show']);
+    // Route::post('/profile', [ProfileController::class, 'update']);
 
 });
 
@@ -154,9 +162,9 @@ Route::prefix('usecases')->group(function () {
 
 
     Route::prefix('search')->controller(RechercheController::class)->group(function(){
-        Route::post('/projets', 'searchCategories');
-        Route::post('/projet', 'search2');
-        Route::get('/documents', 'searchDocuments');
+        Route::post('/projets', 'search');
+        Route::post('/categories', 'searchCategories');
+        Route::post('/documents', 'searchDocuments');
     });
 
     Route::prefix('listing')->controller(ListingController::class)->group(function(){
@@ -166,7 +174,7 @@ Route::prefix('usecases')->group(function () {
         Route::get('/user/documents/{id}', 'showUserDocuments');
         Route::get('/user/projets/{id}', 'showUserProjects');
         Route::get('/count/', 'countProjectsByStatus');
-
+        Route::get('/getprojectstype', 'getProjectTypes');
 
     });
 
@@ -183,6 +191,13 @@ Route::prefix('usecases')->group(function () {
 
     Route::prefix('add')->controller(AddController::class)->group(function(){
         Route::post('doc/projet/{id}', 'ajouterDocument');
+    });
+
+    Route::prefix('status')->controller(ProjectStatusController::class)->group(function(){
+        Route::get('/approuved/{id}', 'approvePendingProject')->middleware('web');
+        Route::get('/rejected/pending/{id}', 'rejectPendingProject')->middleware('web');
+        Route::get('/rejected/approuved/{id}', 'rejectApprovedProject')->middleware('web');
+        Route::put('projects/{id}/status','updateStatus')->middleware('web');
     });
 
 });
