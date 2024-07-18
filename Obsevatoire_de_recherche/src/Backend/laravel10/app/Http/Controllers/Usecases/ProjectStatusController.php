@@ -70,7 +70,7 @@ class ProjectStatusController extends Controller
     {
         // Valider la requête
         $request->validate([
-            'status' => 'required|string',
+            'status' => ['required', 'in:Not Submit,Pending,Approved,Rejected'],
         ]);
 
         // Trouver le projet par ID
