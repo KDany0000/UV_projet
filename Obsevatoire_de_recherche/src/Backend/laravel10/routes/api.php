@@ -197,7 +197,7 @@ Route::prefix('usecases')->group(function () {
         Route::get('/approuved/{id}', 'approvePendingProject')->middleware('web');
         Route::get('/rejected/pending/{id}', 'rejectPendingProject')->middleware('web');
         Route::get('/rejected/approuved/{id}', 'rejectApprovedProject')->middleware('web');
-        Route::put('projects/{id}/status','updateStatus')->middleware('web');
+        Route::put('projects/{id}','updateStatus')->middleware('web');
     });
 
 });
