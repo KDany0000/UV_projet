@@ -13,19 +13,6 @@ class ProjectViewController extends Controller
     {
         $ipAddress = $request->ip();
 
-        // Vérifier si la vue existe déjà
-        $viewExists = ProjectView::where('tbl_projet_id', $id)->where('ip_address', $ipAddress)->exists();
-
-        if ($viewExists) {
-            return response()->json(['message' => 'You have already viewed this project.'], 200);
-        }
-
-        // Ajouter une nouvelle vue
-        ProjectView::create([
-            'tbl_projet_id' => $id,
-            'ip_address' => $ipAddress,
-        ]);
-
         // Incrémenter le compteur de vues du projet
         $project = TblProjet::findOrFail($id);
         $project->increment('views');
@@ -35,4 +22,5 @@ class ProjectViewController extends Controller
             'views' => $project->views,
         ]);
     }
+
 }

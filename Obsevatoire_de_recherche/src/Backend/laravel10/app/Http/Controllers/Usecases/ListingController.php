@@ -216,19 +216,27 @@ class ListingController extends Controller
     }
 
     public function countProjectsByStatus()
+    {
+        // Récupérer les comptes de projets par statut où soumis est true
+        $projectCounts = TblProjet::select('status', DB::raw('count(*) as total'))
+                                    ->where('soumis', true)
+                                    ->groupBy('status')
+                                    ->get();
+    
+        // Transformer les résultats pour inclure les statuts et les comptes correspondants
+        $resultats = $projectCounts->mapWithKeys(function($project) {
+            return [$project->status => $project->total];
+        });
+    
+        // Retourner les résultats sous forme de tableau
+        return response()->json([$resultats]);
+    }
+    
+
+public function getProjectTypes()
 {
-    // Récupérer les comptes de projets par statut
-    $projectCounts = TblProjet::select('status', DB::raw('count(*) as total'))
-                                ->groupBy('status')
-                                ->get();
-
-    // Transformer les résultats pour inclure les statuts et les comptes correspondants
-    $resultats = $projectCounts->mapWithKeys(function($project) {
-        return [$project->status => $project->total];
-    });
-
-    // Retourner les résultats sous forme de tableau
-    return response()->json([$resultats]);
+    $types = ['Projet', 'Memoire', 'Article'];
+    return response()->json($types);
 }
 
 }

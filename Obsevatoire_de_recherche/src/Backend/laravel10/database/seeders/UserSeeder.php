@@ -18,6 +18,14 @@ class UserSeeder extends Seeder
             "email"=>'russeldongmo05@gmail.com',
             'password'=> bcrypt('12345678'),
             'tbl_filiere_id'=>'1',
+            //'role'=>'admin'
+        ]);
+
+        User::create([
+            'nom_user'=>'Dongmo Russel',
+            "email"=>'russeldongmo96@gmail.com',
+            'password'=> bcrypt('12345678'),
+            'tbl_filiere_id'=>'1',
             'role'=>'admin'
         ]);
 

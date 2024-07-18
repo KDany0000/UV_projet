@@ -21,21 +21,6 @@ return [
                         'analyzer' => 'edge_ngram_analyzer',
                         'search_analyzer' => 'standard',
                     ],
-                    'descript_projet' => [
-                        'type' => 'text',
-                        'analyzer' => 'edge_ngram_analyzer',
-                        'search_analyzer' => 'standard',
-                    ],
-                    'categorie' => [
-                        'type' => 'nested',
-                        'properties' => [
-                            'nom_cat' => [
-                                'type' => 'text',
-                                'analyzer' => 'edge_ngram_analyzer',
-                                'search_analyzer' => 'standard',
-                            ],
-                        ],
-                    ],
                 ],
             ],
             'tbl_documents' => [

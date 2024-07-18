@@ -8,15 +8,16 @@ use App\Models\TblCategorie;
 use App\Models\TblProjet;
 
 class APIAcceuilController extends Controller
-{public function index()
+{
+    public function index()
     {
         // Récupérer toutes les catégories avec le nombre de projets approuvés associés, et charger les relations nécessaires
         $categories = TblCategorie::with(['projets' => function($query) {
             $query->where('status', 'Approved')->with(['niveau', 'user.filiere.faculte']);
         }])->withCount(['projets' => function($query) {
-            $query->where('status', 'Approved');
+            $query->where('soumis', true)->where('status', 'Approved');
         }])->get();
-    
+
         // Formater les résultats pour inclure les détails des projets approuvés
         $formattedCategories = $categories->map(function ($category) {
             return [
@@ -33,11 +34,11 @@ class APIAcceuilController extends Controller
                 })
             ];
         });
-    
+
         // Retourner les résultats en JSON
         return response()->json($formattedCategories);
     }
-    
+
 
 
     public function listerProjets()
@@ -64,6 +65,7 @@ class APIAcceuilController extends Controller
     {
         $projets = TblProjet::with(['categorie', 'user','niveau'])
                             ->where('status', 'Approved')
+                            ->where('soumis', true)
                             ->orderBy('created_at', 'desc')
                             ->get();
 

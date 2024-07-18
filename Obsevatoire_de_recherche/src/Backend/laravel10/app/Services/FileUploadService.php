@@ -9,8 +9,22 @@ class FileUploadService
 {
     public function uploadFile(UploadedFile $file, string $path): string
     {
-        $fileName = $file->getClientOriginalName();
-        $finalPath = $file->storeAs($path, $fileName);
+        $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $uniqueFileName = $originalFileName . '_' . time() . '_' . uniqid() . '.' . $extension;
+        $finalPath = $file->storeAs($path, $uniqueFileName);
         return Storage::url($finalPath);
     }
+
+    public function deleteFile(string $path): bool
+    {
+         $fullPath = 'public/' . $path;
+
+        if (Storage::exists($fullPath)) {
+            return Storage::delete($fullPath);
+        }
+
+        return false;
+    }
+    
 }

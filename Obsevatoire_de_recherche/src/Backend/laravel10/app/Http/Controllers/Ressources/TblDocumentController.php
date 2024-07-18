@@ -5,10 +5,21 @@ namespace App\Http\Controllers\Ressources;
 use App\Http\Controllers\Controller;
 use App\Models\TblDocument;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Services\FileUploadService;
+use App\Models\TblProjet;
 
 class TblDocumentController extends Controller
 {
+
+    private $fileUploadService;
+
+    public function __construct(FileUploadService $fileUploadService)
+    {
+        $this->fileUploadService = $fileUploadService;
+    }
+
     /**
      * @OA\Get(
      *     path="/api/ressources/documents",
@@ -51,26 +62,43 @@ class TblDocumentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nom_doc' => 'required|unique:tbl_documents,nom_doc|max:255',
-            'lien_doc' => 'required|unique:tbl_documents,lien_doc|max:255',
-            'type_doc' => ['required', 'in:PDF,WORD,POWEPOINT'],
+            'type_doc' => ['required', 'in:PDF,WORD,POWERPOINT'],
             'resume' => 'required',
             'tbl_projet_id' => 'required|exists:tbl_projets,id',
+            'document' => 'required|file|mimes:pdf,doc,docx',
+            'user_id' => 'required|exists:users,id',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-
+    
+        $project = TblProjet::find($request->tbl_projet_id);
+    
+        if (!$project) {
+            return response()->json(['error' => 'Project not found'], 404);
+        }
+    
+        if ($project->type == "Projet") {
+            $documentUrl = $this->fileUploadService->uploadFile($request->file('document'), 'public/Projets');
+        } elseif ($project->type == "Memoire") {
+            $documentUrl = $this->fileUploadService->uploadFile($request->file('document'), 'public/Memoires');
+        } else {
+            $documentUrl = $this->fileUploadService->uploadFile($request->file('document'), 'public/Articles');
+        }
+    
         $document = TblDocument::create([
             'nom_doc' => $request->nom_doc,
-            'lien_doc' => $request->lien_doc,
+            'lien_doc' => $documentUrl,
             'type_doc' => $request->type_doc,
             'resume' => $request->resume,
             'tbl_projet_id' => $request->tbl_projet_id,
+            'user_id' => $request->user_id,
         ]);
-
+    
         return response()->json($document, 201);
     }
+
 
     /**
      * @OA\Get(
@@ -133,27 +161,44 @@ class TblDocumentController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'nom_doc' => 'required|max:255',
-            'lien_doc' => 'required|max:255',
-            'type_doc' => 'required',
+            'nom_doc' => 'required|unique:tbl_documents,nom_doc|max:255',
+            'type_doc' => ['required', 'in:PDF,WORD,POWERPOINT'],
             'resume' => 'required',
-            'tbl_projet_id' => 'required',
+            'tbl_projet_id' => 'required|exists:tbl_projets,id',
+            'document' => 'nullable|file|mimes:pdf,doc,docx',
+            'user_id' => 'required|exists:users,id',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-
+    
+        $project = TblProjet::find($request->tbl_projet_id);
+    
         $document = TblDocument::where('id', $id)->firstOrFail();
+    
+        $project = TblProjet::find($request->tbl_projet_id);
+    
+        if (!$project) {
+            return response()->json(['error' => 'Project not found'], 404);
+        }
+    
+        if ($request->hasFile('document')) {
+            $documentUrl = $this->fileUploadService->uploadFile($request->file('document'), 'public/' . ucfirst($project->type) . 's');
+            $document->lien_doc = $documentUrl;
+        }
+    
         $document->nom_doc = $request->nom_doc;
-        $document->lien_doc = $request->lien_doc;
         $document->type_doc = $request->type_doc;
         $document->resume = $request->resume;
         $document->tbl_projet_id = $request->tbl_projet_id;
+        $document->tbl_user_id = $request->user_id;
         $document->save();
-
+    
         return response()->json($document);
-    }
+   }
+
+    
 
     /**
      * @OA\Delete(
@@ -178,7 +223,9 @@ class TblDocumentController extends Controller
      */
     public function destroy(string $id)
     {
-        TblDocument::where('id', $id)->delete();
+        $document = TblDocument::findOrFail($id);
+        Storage::disk('public')->delete($document->lien_doc);
+        $document->delete();
         return response()->noContent();
     }
 }

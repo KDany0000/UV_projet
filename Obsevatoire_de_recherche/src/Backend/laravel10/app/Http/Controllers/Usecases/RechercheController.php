@@ -39,10 +39,10 @@ class RechercheController extends Controller
      *     )
      * )
      */
-    public function searchCategories(Request $request)
+    public function search(Request $request)
 {
     $query = $request->input('query');
-    $results = [];
+    $results = collect();
 
     // Recherche des catégories avec Elasticsearch via Scout
     $categoryResults = TblCategorie::search($query, function ($client, $body) use ($query) {
@@ -50,32 +50,12 @@ class RechercheController extends Controller
             'index' => 'tbl_categories',
             'body'  => [
                 'query' => [
-                    'bool' => [
-                        'should' => [
-                            [
-                                'match' => [
-                                    'nom_cat' => [
-                                        'query' => $query,
-                                        'fuzziness' => 'AUTO',
-                                    ],
-                                ],
-                            ],
-                            [
-                                'prefix' => [
-                                    'nom_cat' => [
-                                        'value' => $query,
-                                    ],
-                                ],
-                            ],
-                            [
-                                'wildcard' => [
-                                    'nom_cat' => [
-                                        'value' => '*' . $query . '*',
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'minimum_should_match' => 1,
+                    'multi_match' => [
+                        'query' => $query,
+                        'fields' => ['nom_cat^3', 'nom_cat.ngram'],
+                        'fuzziness' => 'AUTO',
+                        'prefix_length' => 1,
+                        'operator' => 'and'
                     ],
                 ],
             ],
@@ -97,6 +77,7 @@ class RechercheController extends Controller
             return [
                 'titre_projet' => $project->titre_projet,
                 'nom_categorie' => $project->categorie->nom_cat,
+                'nom_utilisateur' => $project->user->nom_user,
                 'filiere' => optional($project->user->filiere)->nom_fil,
                 'niveau' => optional($project->niveau)->code_niv,
                 'description' => $project->descript_projet,
@@ -112,32 +93,12 @@ class RechercheController extends Controller
             'index' => 'tbl_projets',
             'body'  => [
                 'query' => [
-                    'bool' => [
-                        'should' => [
-                            [
-                                'match' => [
-                                    'titre_projet' => [
-                                        'query' => $query,
-                                        'fuzziness' => 'AUTO',
-                                    ],
-                                ],
-                            ],
-                            [
-                                'prefix' => [
-                                    'titre_projet' => [
-                                        'value' => $query,
-                                    ],
-                                ],
-                            ],
-                            [
-                                'wildcard' => [
-                                    'titre_projet' => [
-                                        'value' => '*' . $query . '*',
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'minimum_should_match' => 1,
+                    'multi_match' => [
+                        'query' => $query,
+                        'fields' => ['titre_projet^3', 'titre_projet.ngram'],
+                        'fuzziness' => 'AUTO',
+                        'prefix_length' => 1,
+                        'operator' => 'and'
                     ],
                 ],
             ],
@@ -153,6 +114,7 @@ class RechercheController extends Controller
         return [
             'titre_projet' => $project->titre_projet,
             'nom_categorie' => $project->categorie->nom_cat,
+            'nom_utilisateur' => $project->user->nom_user,
             'filiere' => optional($project->user->filiere)->nom_fil,
             'niveau' => optional($project->niveau)->code_niv,
             'description' => $project->descript_projet,
@@ -164,11 +126,56 @@ class RechercheController extends Controller
     // Combiner les résultats des catégories et des projets
     $results = $formattedCategories->merge($formattedProjects);
 
+    // Filtrer les doublons
+    $uniqueResults = $results->unique('titre_projet')->values();
+
     // Retourner les résultats au format JSON
-    return response()->json(['results' => $results]);
+    return response()->json(['results' => $uniqueResults]);
 }
 
-    
+
+public function searchCategories(Request $request)
+{
+    $query = $request->input('query');
+
+    // Recherche des catégories avec Elasticsearch via Scout
+    $categoryResults = TblCategorie::search($query, function ($client, $body) use ($query) {
+        $params = [
+            'index' => 'tbl_categories',
+            'body'  => [
+                'query' => [
+                    'multi_match' => [
+                        'query' => $query,
+                        'fields' => ['nom_cat^3', 'nom_cat.ngram'],
+                        'fuzziness' => 'AUTO',
+                        'prefix_length' => 1,
+                        'operator' => 'and'
+                    ],
+                ],
+            ],
+        ];
+
+        return $client->search($params)->asArray();
+    })->get();
+
+    // Charger le nombre de projets associés à chaque catégorie
+    $formattedCategories = $categoryResults->map(function ($category) {
+        $projectCount = $category->projets()->count();
+        return [
+            'nom_cat' => $category->nom_cat,
+            'descript_cat' => $category->descript_cat,
+            'icone' => $category->icone,
+            'projets_count' => $projectCount,
+        ];
+    });
+
+    // Retourner les résultats au format JSON
+    return response()->json(['results' => $formattedCategories]);
+}
+
+
+
+
 
 
 
@@ -204,45 +211,42 @@ class RechercheController extends Controller
     {
         $query = $request->input('query');
 
-        $results = TblDocument::search($query, function ($client, $body) use ($query) {
+        // Recherche des documents avec Elasticsearch via Scout
+        $documentResults = TblDocument::search($query, function ($client, $body) use ($query) {
             $params = [
                 'index' => 'tbl_documents',
                 'body'  => [
                     'query' => [
-                        'bool' => [
-                            'should' => [
-                                [
-                                    'match' => [
-                                        'nom_doc' => [
-                                            'query' => $query,
-                                            'fuzziness' => 'AUTO',
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'prefix' => [
-                                        'nom_doc' => [
-                                            'value' => $query,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'minimum_should_match' => 1,
+                        'multi_match' => [
+                            'query' => $query,
+                            'fields' => ['nom_doc^3', 'nom_doc.ngram'],
+                            'fuzziness' => 'AUTO',
+                            'prefix_length' => 1,
+                            'operator' => 'and'
                         ],
                     ],
                 ],
             ];
 
-            $response = $client->search($params);
-
-            // Convertir la réponse en tableau
-            $responseArray = $response->asArray();
-
-            return $responseArray;
+            return $client->search($params)->asArray();
         })->get();
 
-        return response()->json($results);
+        // Formater les résultats des documents
+        $formattedDocuments = $documentResults->map(function ($document) {
+            return [
+                'nom_document' => $document->nom_doc,
+                'description' => $document->description,
+                'path' => $document->path,
+                'date_creation' => $document->created_at->format('Y-m-d'),
+                'projet_associe' => optional($document->projet)->titre_projet,
+                'auteur' => optional($document->user)->name,
+            ];
+        });
+
+        // Retourner les résultats au format JSON
+        return response()->json(['results' => $formattedDocuments]);
     }
+
 
 
 

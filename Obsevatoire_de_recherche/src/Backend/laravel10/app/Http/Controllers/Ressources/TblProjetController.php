@@ -33,8 +33,10 @@ class TblProjetController extends Controller
     public function index()
     {
         // Récupérer tous les projets avec les informations de l'utilisateur associé
-        $projets = TblProjet::with('user','niveau','categorie')->get();
-
+        $projets = TblProjet::with('user', 'niveau', 'categorie')
+                            ->where('soumis', true) // Filtrer les projets soumis
+                            ->get();
+    
         // Transformer les projets pour inclure les attributs souhaités
         $resultats = $projets->map(function($projet) {
             return [
@@ -44,21 +46,20 @@ class TblProjetController extends Controller
                 'image' => $projet->image,
                 'status' => $projet->status,
                 'nom_utilisateur' => $projet->user->nom_user,
-                'email'=>$projet->user->email,
-                'views'=>$projet->views,
-                'type'=>$projet->type,
-                'niveau'=>$projet->niveau->code_niv,
-                'nom_categorie'=>$projet->categorie->nom_cat,
+                'email' => $projet->user->email,
+                'views' => $projet->views,
+                'type' => $projet->type,
+                'niveau' => $projet->niveau->code_niv,
+                'nom_categorie' => $projet->categorie->nom_cat,
                 'created_at' => $projet->created_at,
                 'updated_at' => $projet->updated_at,
-
             ];
         });
-
+    
         // Retourner les résultats en JSON
         return response()->json($resultats);
     }
-
+    
     /**
      * @OA\Post(
      *     path="/api/ressources/projets",
@@ -88,6 +89,7 @@ class TblProjetController extends Controller
             'user_id' => 'required|exists:users,id',
             'tbl_categorie_id' => 'required|exists:tbl_categories,id',
             'image' => 'required|image|max:2048',
+            'type' => ['required', 'in:Projet,Memoire,Article'],
         ]);
 
         if ($validator->fails()) {
@@ -103,6 +105,7 @@ class TblProjetController extends Controller
             'user_id' => $request->user_id,
             'tbl_categorie_id' => $request->tbl_categorie_id,
             'image' => $imageUrl,
+            'type' => $request->type,
         ]);
 
         return response()->json($projet, 201);
