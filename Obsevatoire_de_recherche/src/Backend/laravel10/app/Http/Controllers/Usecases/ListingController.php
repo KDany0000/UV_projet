@@ -160,6 +160,7 @@ class ListingController extends Controller
     // Formater les projets pour inclure uniquement les noms des niveaux et catégories
     $formattedProjets = $projets->map(function ($projet) {
         return [
+                'id'=>$projet->id,
                'titre' => $projet->titre_projet,
                 'description' => $projet->descript_projet,
                 'type' => $projet->type,
