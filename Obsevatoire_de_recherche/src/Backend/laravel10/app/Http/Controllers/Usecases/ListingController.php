@@ -168,6 +168,7 @@ class ListingController extends Controller
                 'status' => $projet->status,
                 'niveau' => $projet->niveau->code_niv,
                 'categorie' => $projet->categorie->nom_cat,
+                'nom_utilisateur' =>$projet->user->nom_user,
                 'created_at' => $projet->created_at,
         ];
     });
