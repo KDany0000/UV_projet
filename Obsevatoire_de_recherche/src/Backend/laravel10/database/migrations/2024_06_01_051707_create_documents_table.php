@@ -17,10 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('nom_doc');
             $table->string('lien_doc')->unique();
-            $table->enum('type_doc', ['PDF', 'WORD', 'POWERPOINT'])->default('PDF');
             $table->foreignIdFor(TblProjet::class)->constrained();
             $table->foreignIdFor(User::class)->constrained();
-            $table->text('resume');
             $table->timestamps();
         });
     }

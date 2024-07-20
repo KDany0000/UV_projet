@@ -59,8 +59,6 @@ class TblDocument extends Model
     protected $fillable = [
         'nom_doc',
         'lien_doc',
-        'type_doc',
-        'resume',
         'user_id',
         'tbl_projet_id',
     ];
