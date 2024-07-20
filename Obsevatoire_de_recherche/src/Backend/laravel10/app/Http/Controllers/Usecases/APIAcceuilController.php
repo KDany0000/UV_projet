@@ -48,6 +48,7 @@ class APIAcceuilController extends Controller
         $resultats = $projets->map(function($projet) {
             return [
                 'id' => $projet->id,
+                'user_id' => $projet->user_id,
                 'titre_projet' => $projet->titre_projet,
                 'descript_projet' => $projet->descript_projet,
                 'image' => $projet->image,
@@ -72,6 +73,7 @@ class APIAcceuilController extends Controller
         $resultats = $projets->map(function($projet) {
             return [
                 'id' => $projet->id,
+                'user_id' => $projet->user_id,
                 'titre_projet' => $projet->titre_projet,
                 'descript_projet' => $projet->descript_projet,
                 'image' => $projet->image,
