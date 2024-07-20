@@ -16,8 +16,6 @@ class DocumentSeeder extends Seeder
         TblDocument::create([
             'nom_doc'=>'Liste des Etudiants',
             'lien_doc' => 'path/to/doc1',
-            'type_doc'=>'PDF',
-            'resume'=>' resume 1',
             'tbl_projet_id'=>'1',
             'user_id'=>'1',
         ]);
@@ -25,8 +23,6 @@ class DocumentSeeder extends Seeder
         TblDocument::create([
             'nom_doc'=>'Statistiques',
             'lien_doc' => 'path/to/doc2',
-            'type_doc'=>'PDF',
-            'resume'=>' resume 2',
             'tbl_projet_id'=>'1',
             'user_id'=>'1',
         ]);
@@ -34,8 +30,6 @@ class DocumentSeeder extends Seeder
         TblDocument::create([
             'nom_doc'=>'liste des projets',
             'lien_doc' => 'path/to/doc3',
-            'type_doc'=>'PDF',
-            'resume'=>' resume 3',
             'tbl_projet_id'=>'1',
             'user_id'=>'2',
         ]);
@@ -43,8 +37,6 @@ class DocumentSeeder extends Seeder
         TblDocument::create([
             'nom_doc'=>'fichier utiles',
             'lien_doc' => 'path/to/doc4',
-            'type_doc'=>'PDF',
-            'resume'=>' resume 4',
             'tbl_projet_id'=>'1',
             'user_id'=>'3',
         ]);

@@ -1542,10 +1542,6 @@
                                         "format": "password",
                                         "example": "password123"
                                     },
-                                    "tel_user": {
-                                        "type": "string",
-                                        "example": "123456789"
-                                    },
                                     "tbl_filiere_id": {
                                         "type": "integer",
                                         "example": "1"
@@ -1783,13 +1779,13 @@
                 }
             }
         },
-        "/api/usecases/password/sendEmailReset": {
+        "/api/usecases/password/sendVerificationCode": {
             "post": {
                 "tags": [
                     "Gestion des mots de passe"
                 ],
-                "summary": "Envoyer le lien de réinitialisation du mot de passe",
-                "operationId": "8769dc58e69f0078ab22ddabb5dba3e5",
+                "summary": "Envoyer un code de vérification pour réinitialisation du mot de passe",
+                "operationId": "ecad4ab28f1a367486ce8f038d620881",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1809,14 +1805,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Lien de réinitialisation envoyé avec succès",
+                        "description": "Code de vérification envoyé avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "We have emailed your password reset link!"
+                                            "example": "We have sent your verification code!"
                                         }
                                     },
                                     "type": "object"
@@ -1843,13 +1839,77 @@
                 }
             }
         },
+        "/api/usecases/password/verifyCode": {
+            "post": {
+                "tags": [
+                    "Gestion des mots de passe"
+                ],
+                "summary": "Vérifier le code de vérification pour réinitialisation du mot de passe",
+                "operationId": "7b6e63677c8e619ecf409283da871f99",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "Adresse email de l'utilisateur",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "verification_code": {
+                                        "description": "Code de vérification",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Code de vérification valide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The verification code is valid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Code de vérification invalide ou expiré",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The verification code is invalid or has expired."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/usecases/password/resetpassword": {
             "post": {
                 "tags": [
                     "Gestion des mots de passe"
                 ],
-                "summary": "Réinitialiser le mot de passe",
-                "operationId": "c336ad5a0dbdfd9089e5eaebc0c14477",
+                "summary": "Réinitialiser le mot de passe avec le code de vérification",
+                "operationId": "275e2117391b91128158bdf634c55cf1",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1873,8 +1933,8 @@
                                         "format": "password",
                                         "minLength": 8
                                     },
-                                    "token": {
-                                        "description": "Token de réinitialisation",
+                                    "verification_code": {
+                                        "description": "Code de vérification",
                                         "type": "string"
                                     }
                                 },
@@ -2114,18 +2174,18 @@
                 }
             }
         },
-        "/api/usecases/search/Projects": {
+        "/api/usecases/search": {
             "get": {
                 "tags": [
                     "Recherche"
                 ],
-                "summary": "Rechercher des projets",
-                "operationId": "7072072be454cc8f86474555765e23dc",
+                "summary": "Rechercher des projets et des catégories",
+                "operationId": "a769f57e30c0c08dac871fbb6f468292",
                 "parameters": [
                     {
                         "name": "query",
                         "in": "query",
-                        "description": "Texte de recherche pour les projets",
+                        "description": "Texte de recherche pour les projets et les catégories",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2134,14 +2194,25 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Liste des projets correspondants",
+                        "description": "Liste des projets et des catégories correspondants",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/TblProjet"
-                                    }
+                                    "properties": {
+                                        "projets": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TblProjet"
+                                            }
+                                        },
+                                        "categories": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TblCategorie"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -2179,44 +2250,6 @@
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/TblDocument"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Requête invalide"
-                    }
-                }
-            }
-        },
-        "/api/usecases/search/categories": {
-            "get": {
-                "tags": [
-                    "Recherche"
-                ],
-                "summary": "Rechercher des catégories",
-                "operationId": "dabf2f02c4e7511d8b6de6d3a060643b",
-                "parameters": [
-                    {
-                        "name": "query",
-                        "in": "query",
-                        "description": "Texte de recherche pour les catégories",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Liste des catégories correspondantes",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/TblCategorie"
                                     }
                                 }
                             }
@@ -2817,8 +2850,8 @@
             "description": "Gestion des mots de passe"
         },
         {
-            "name": "GetElements",
-            "description": "GetElements"
+            "name": "Gestion des mots de passe",
+            "description": "Gestion des mots de passe"
         },
         {
             "name": "GetElements",
@@ -2837,8 +2870,8 @@
             "description": "GetElements"
         },
         {
-            "name": "Recherche",
-            "description": "Recherche"
+            "name": "GetElements",
+            "description": "GetElements"
         },
         {
             "name": "Recherche",

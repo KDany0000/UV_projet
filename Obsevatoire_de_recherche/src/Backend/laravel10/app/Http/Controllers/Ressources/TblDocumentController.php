@@ -62,8 +62,6 @@ class TblDocumentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nom_doc' => 'required|unique:tbl_documents,nom_doc|max:255',
-            'type_doc' => ['required', 'in:PDF,WORD,POWERPOINT'],
-            'resume' => 'required',
             'tbl_projet_id' => 'required|exists:tbl_projets,id',
             'document' => 'required|file|mimes:pdf,doc,docx',
             'user_id' => 'required|exists:users,id',
@@ -90,8 +88,6 @@ class TblDocumentController extends Controller
         $document = TblDocument::create([
             'nom_doc' => $request->nom_doc,
             'lien_doc' => $documentUrl,
-            'type_doc' => $request->type_doc,
-            'resume' => $request->resume,
             'tbl_projet_id' => $request->tbl_projet_id,
             'user_id' => $request->user_id,
         ]);

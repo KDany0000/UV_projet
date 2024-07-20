@@ -16,7 +16,7 @@ class ProjectStatusController extends Controller
     {
         $project = TblProjet::find($projectId);
 
-        if ($project && ($project->status === 'Pending' || $project->status === 'Rejected')) {
+        if ($project && $project->status === 'Pending') {
             $project->status = 'Approved';
             $project->save();
 
@@ -34,7 +34,7 @@ class ProjectStatusController extends Controller
     {
         $project = TblProjet::find($projectId);
 
-        if ($project && ($project->status === 'Pending' || $project->status === 'Approved')) {
+        if ($project && $project->status === 'Pending' ) {
             $project->status = 'Rejected';
             $project->save();
 
@@ -48,19 +48,19 @@ class ProjectStatusController extends Controller
         return response()->json(['message' => 'Projet introuvable ou déjà approuvé/rejeté.'], 404);
     }
 
-    public function rejectApprovedProject($projectId)
+    public function pendingProject($projectId)
     {
         $project = TblProjet::find($projectId);
 
-        if ($project && $project->status === 'Approved') {
-            $project->status = 'Rejected';
+        if ($project && ($project->status === 'Approved' || $project->status === 'Rejected')) {
+            $project->status = 'Pending';
             $project->save();
 
             // Envoi de la notification à l'utilisateur
-            $message = "Votre projet \"{$project->titre_projet}\" a été rejeté après approbation.";
-            $project->user->notify(new ProjectStatusChangeNotification($project, 'Rejected', $message));
+            $message = "Votre projet \"{$project->titre_projet}\" a été remis en attente pour une nouvelle evaluation.";
+            $project->user->notify(new ProjectStatusChangeNotification($project, 'Pending', $message));
 
-            return response()->json(['message' => 'Projet rejeté avec succès.']);
+            return response()->json(['message' => 'Projet restaurer avec succès.']);
         }
 
         return response()->json(['message' => 'Projet introuvable ou déjà en attente/rejeté.'], 404);

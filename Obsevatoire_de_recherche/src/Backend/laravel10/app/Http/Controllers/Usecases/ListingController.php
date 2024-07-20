@@ -161,6 +161,7 @@ class ListingController extends Controller
     $formattedProjets = $projets->map(function ($projet) {
         return [
                 'id'=>$projet->id,
+                'user_id'=>$projet->user->id,
                'titre' => $projet->titre_projet,
                 'description' => $projet->descript_projet,
                 'type' => $projet->type,

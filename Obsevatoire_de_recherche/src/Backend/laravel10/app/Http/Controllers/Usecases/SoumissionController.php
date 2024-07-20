@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 
 class SoumissionController extends Controller
 {
-    public function submitProject(Request $request)
+    public function submitProject($id)
 {
-    $project = TblProjet::find($request->project_id);
+    $project = TblProjet::find($id);
 
     if (!$project) {
         return response()->json(['message' => 'Projet introuvable.'], 404);
