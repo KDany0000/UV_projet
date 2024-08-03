@@ -43,6 +43,8 @@ class ProjectStatusChangeNotification extends Notification implements ShouldQueu
             $message = 'Bonjour ' . $notifiable->nom_user . ', votre projet "' . $this->project->titre_projet . '" a été approuvé par AcadProManage. Nous vous remercions pour votre contribution.';
         } elseif ($this->status === 'Rejected') {
             $message = 'Bonjour ' . $notifiable->nom_user . ', votre projet "' . $this->project->titre_projet . '" n\'a pas été approuvé par AcadProManage. Nous vous remercions pour votre soumission et vous encourageons à soumettre à nouveau après les modifications nécessaires.';
+        }else{
+            $message = 'Bonjour ' . $notifiable->nom_user . ', votre projet "' . $this->project->titre_projet . '" a ete restaurer et mis en etat d attente pour une nouvelle evaluation. Nous vous tiendrons informer de la decision finale ';
         }
 
         return [

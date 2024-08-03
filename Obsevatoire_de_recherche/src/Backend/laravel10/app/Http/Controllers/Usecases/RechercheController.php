@@ -7,6 +7,8 @@ use App\Models\TblProjet;
 use App\Http\Controllers\Controller;
 use App\Models\TblCategorie;
 use App\Models\TblDocument;
+use App\Models\TblCollaborateur;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
 
@@ -40,38 +42,75 @@ class RechercheController extends Controller
      * )
      */
     public function search(Request $request)
-{
-    $query = $request->input('query');
-    $results = collect();
+    {
+        $query = $request->input('query');
+        $results = collect();
 
-    // Recherche des catégories avec Elasticsearch via Scout
-    $categoryResults = TblCategorie::search($query, function ($client, $body) use ($query) {
-        $params = [
-            'index' => 'tbl_categories',
-            'body'  => [
-                'query' => [
-                    'multi_match' => [
-                        'query' => $query,
-                        'fields' => ['nom_cat^3', 'nom_cat.ngram'],
-                        'fuzziness' => 'AUTO',
-                        'prefix_length' => 1,
-                        'operator' => 'and'
+        // Recherche des catégories avec Elasticsearch via Scout
+        $categoryResults = TblCategorie::search($query, function ($client, $body) use ($query) {
+            $params = [
+                'index' => 'tbl_categories',
+                'body'  => [
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $query,
+                            'fields' => ['nom_cat^3', 'nom_cat.ngram'],
+                            'fuzziness' => 'AUTO',
+                            'prefix_length' => 1,
+                            'operator' => 'and'
+                        ],
                     ],
                 ],
-            ],
-        ];
+            ];
 
-        return $client->search($params)->asArray();
-    })->get();
+            return $client->search($params)->asArray();
+        })->get();
 
-    // Charger les projets associés à chaque catégorie
-    foreach ($categoryResults as $category) {
-        $category->load(['projets.user.filiere', 'projets.niveau']);
-    }
+        // Charger les projets associés à chaque catégorie
+        foreach ($categoryResults as $category) {
+            $category->load(['projets.user.filiere', 'projets.niveau']);
+        }
 
-    // Formater les résultats des catégories avec les détails des projets
-    $formattedCategories = $categoryResults->flatMap(function ($category) {
-        return $category->projets->filter(function ($project) {
+        // Formater les résultats des catégories avec les détails des projets
+        $formattedCategories = $categoryResults->flatMap(function ($category) {
+            return $category->projets->filter(function ($project) {
+                return $project->status === 'Approved'; // Filtrer les projets approuvés
+            })->map(function ($project) {
+                return [
+                    'titre_projet' => $project->titre_projet,
+                    'nom_categorie' => $project->categorie->nom_cat,
+                    'nom_utilisateur' => $project->user->nom_user,
+                    'filiere' => optional($project->user->filiere)->nom_fil,
+                    'niveau' => optional($project->niveau)->code_niv,
+                    'description' => $project->descript_projet,
+                    'image' => $project->image,
+                    'date_creation' => $project->created_at->format('Y-m-d'),
+                ];
+            });
+        });
+
+        // Recherche des projets avec Elasticsearch via Scout
+        $projectResults = TblProjet::search($query, function ($client, $body) use ($query) {
+            $params = [
+                'index' => 'tbl_projets',
+                'body'  => [
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $query,
+                            'fields' => ['titre_projet^3', 'titre_projet.ngram'],
+                            'fuzziness' => 'AUTO',
+                            'prefix_length' => 1,
+                            'operator' => 'and'
+                        ],
+                    ],
+                ],
+            ];
+
+            return $client->search($params)->asArray();
+        })->get();
+
+        // Filtrer et formater les résultats des projets approuvés
+        $formattedProjects = $projectResults->filter(function ($project) {
             return $project->status === 'Approved'; // Filtrer les projets approuvés
         })->map(function ($project) {
             return [
@@ -85,53 +124,95 @@ class RechercheController extends Controller
                 'date_creation' => $project->created_at->format('Y-m-d'),
             ];
         });
-    });
 
-    // Recherche des projets avec Elasticsearch via Scout
-    $projectResults = TblProjet::search($query, function ($client, $body) use ($query) {
-        $params = [
-            'index' => 'tbl_projets',
-            'body'  => [
-                'query' => [
-                    'multi_match' => [
-                        'query' => $query,
-                        'fields' => ['titre_projet^3', 'titre_projet.ngram'],
-                        'fuzziness' => 'AUTO',
-                        'prefix_length' => 1,
-                        'operator' => 'and'
+        // Recherche des collaborateurs avec Elasticsearch via Scout
+        $collaboratorResults = TblCollaborateur::search($query, function ($client, $body) use ($query) {
+            $params = [
+                'index' => 'tbl_collaborateurs',
+                'body'  => [
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $query,
+                            'fields' => ['nom_collab^3', 'nom_collab.ngram'],
+                            'fuzziness' => 'AUTO',
+                            'prefix_length' => 1,
+                            'operator' => 'and'
+                        ],
                     ],
                 ],
-            ],
-        ];
+            ];
 
-        return $client->search($params)->asArray();
-    })->get();
+            return $client->search($params)->asArray();
+        })->get();
 
-    // Filtrer et formater les résultats des projets approuvés
-    $formattedProjects = $projectResults->filter(function ($project) {
-        return $project->status === 'Approved'; // Filtrer les projets approuvés
-    })->map(function ($project) {
-        return [
-            'titre_projet' => $project->titre_projet,
-            'nom_categorie' => $project->categorie->nom_cat,
-            'nom_utilisateur' => $project->user->nom_user,
-            'filiere' => optional($project->user->filiere)->nom_fil,
-            'niveau' => optional($project->niveau)->code_niv,
-            'description' => $project->descript_projet,
-            'image' => $project->image,
-            'date_creation' => $project->created_at->format('Y-m-d'),
-        ];
-    });
+        // Formater les résultats des collaborateurs
+        $formattedCollaborators = $collaboratorResults->flatMap(function ($collaborator) {
+            return $collaborator->projets->filter(function ($project) {
+                return $project->status === 'Approved'; // Filtrer les projets approuvés
+            })->map(function ($project) use ($collaborator) {
+                return [
+                    'titre_projet' => $project->titre_projet,
+                    'nom_categorie' => $project->categorie->nom_cat,
+                    'nom_utilisateur' => $project->user->nom_user,
+                    'nom_collaborateur' => $collaborator->nom_collab,
+                    'filiere' => optional($project->user->filiere)->nom_fil,
+                    'niveau' => optional($project->niveau)->code_niv,
+                    'description' => $project->descript_projet,
+                    'image' => $project->image,
+                    'date_creation' => $project->created_at->format('Y-m-d'),
+                ];
+            });
+        });
 
-    // Combiner les résultats des catégories et des projets
-    $results = $formattedCategories->merge($formattedProjects);
+        // Recherche des utilisateurs avec Elasticsearch via Scout
+        $userResults = User::search($query, function ($client, $body) use ($query) {
+            $params = [
+                'index' => 'users',
+                'body'  => [
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $query,
+                            'fields' => ['nom_user^3', 'nom_user.ngram'],
+                            'fuzziness' => 'AUTO',
+                            'prefix_length' => 1,
+                            'operator' => 'and'
+                        ],
+                    ],
+                ],
+            ];
 
-    // Filtrer les doublons
-    $uniqueResults = $results->unique('titre_projet')->values();
+            return $client->search($params)->asArray();
+        })->get();
 
-    // Retourner les résultats au format JSON
-    return response()->json(['results' => $uniqueResults]);
-}
+        // Formater les résultats des utilisateurs
+        $formattedUsers = $userResults->flatMap(function ($user) {
+            return $user->projets->filter(function ($project) {
+                return $project->status === 'Approved'; // Filtrer les projets approuvés
+            })->map(function ($project) use ($user) {
+                return [
+                    'titre_projet' => $project->titre_projet,
+                    'nom_categorie' => $project->categorie->nom_cat,
+                    'nom_utilisateur' => $user->nom_user,
+                    'filiere' => optional($user->filiere)->nom_fil,
+                    'niveau' => optional($project->niveau)->code_niv,
+                    'description' => $project->descript_projet,
+                    'image' => $project->image,
+                    'date_creation' => $project->created_at->format('Y-m-d'),
+                ];
+            });
+        });
+
+        // Combiner les résultats des catégories, projets, collaborateurs et utilisateurs
+        $results = $formattedCategories->merge($formattedProjects)
+                                       ->merge($formattedCollaborators)
+                                       ->merge($formattedUsers);
+
+        // Filtrer les doublons
+        $uniqueResults = $results->unique('titre_projet')->values();
+
+        // Retourner les résultats au format JSON
+        return response()->json(['results' => $uniqueResults]);
+    }
 
 
 public function searchCategories(Request $request)

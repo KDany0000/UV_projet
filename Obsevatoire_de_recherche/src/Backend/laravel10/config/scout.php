@@ -25,6 +25,14 @@ return [
                 'index' => env('ELASTICSEARCH_INDEX_CATEGORIES', 'tbl_categories'),
                 'refresh_documents' => env('SCOUT_ELASTICSEARCH_REFRESH', false),
             ],
+            'users' => [
+                'index' => env('ELASTICSEARCH_INDEX_USERS', 'users'),
+                'refresh_documents' => env('SCOUT_ELASTICSEARCH_REFRESH', false),
+            ],
+            'collaborateurs' => [
+                'index' => env('ELASTICSEARCH_INDEX_COLLABORATEURS', 'collaborateurs'),
+                'refresh_documents' => env('SCOUT_ELASTICSEARCH_REFRESH', false),
+            ],
         ],
     ],
 ];

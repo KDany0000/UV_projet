@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,Searchable;
 
     public function sendPasswordResetNotification($token)
     {
@@ -54,6 +55,15 @@ class User extends Authenticatable
     public function superviseurs()
     {
         return $this->belongsToMany(TblSuperviseur::class, 'superviseur_utilisateur');
+    }
+
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        return [
+            'nom_user' => $array['nom_user'],
+        ];
     }
 
 

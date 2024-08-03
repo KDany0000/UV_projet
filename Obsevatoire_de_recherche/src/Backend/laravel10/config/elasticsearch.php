@@ -52,6 +52,30 @@ return [
                     ],
                 ],
             ],
+            'users' => [
+                'properties' => [
+                    'id' => [
+                        'type' => 'keyword',
+                    ],
+                    'nom_user' => [
+                        'type' => 'text',
+                        'analyzer' => 'edge_ngram_analyzer',
+                        'search_analyzer' => 'standard',
+                    ],
+                ],
+            ],
+            'collaborateurs' => [
+                'properties' => [
+                    'id' => [
+                        'type' => 'keyword',
+                    ],
+                    'nom_collab' => [
+                        'type' => 'text',
+                        'analyzer' => 'edge_ngram_analyzer',
+                        'search_analyzer' => 'standard',
+                    ],
+                ],
+            ],
         ],
         'settings' => [
             'default' => [
