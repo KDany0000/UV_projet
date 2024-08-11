@@ -174,6 +174,12 @@ class TblCategorieController extends Controller
         $categorie->descript_cat = $request->descript_cat;
 
         if ($request->hasFile('icone')) {
+            // Supprimer l'image précédente si elle existe
+            if ($categorie->image) {
+                $this->fileUploadService->deleteFile($categorie->icone);
+            }
+
+            // Télécharger la nouvelle image
             $iconeUrl = $this->fileUploadService->uploadFile($request->file('icone'), 'public/icones');
             $categorie->icone = $iconeUrl;
         }

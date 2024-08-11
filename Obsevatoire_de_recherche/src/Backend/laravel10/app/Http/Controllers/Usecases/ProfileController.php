@@ -7,9 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Services\FileUploadService;
 
 class ProfileController extends Controller
 {
+
+    private $fileUploadService;
+
+    public function __construct(FileUploadService $fileUploadService)
+    {
+        $this->fileUploadService = $fileUploadService;
+    }
+
     public function show()
     {
         $user = Auth::user();
@@ -38,5 +47,31 @@ class ProfileController extends Controller
 
         return response()->json(['message' => 'Profil mis à jour avec succès.', 'user' => $user], 200);
     }
+
+    public function updateProfileImage(Request $request)
+{
+    // Valider le fichier image
+    $request->validate([
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Récupérer l'utilisateur authentifié
+    $user = Auth::user();
+
+    // Gérer l'image précédente si elle existe (par exemple, la supprimer)
+    if ($user->profile_image) {
+        $this->fileUploadService->deleteFile($user->profile_image);
+    }
+
+    // Télécharger la nouvelle image
+    $path = $this->fileUploadService->uploadFile($request->file('image'), 'public/profile_images');
+
+    // Mettre à jour le chemin de l'image dans le profil de l'utilisateur
+    $user->profile_image = $path;
+    $user->save();
+
+    // Retourner une réponse avec succès
+    return response()->json(['message' => 'Image de profil mise à jour avec succès!', 'image_path' => $path], 200);
+}
 }
 

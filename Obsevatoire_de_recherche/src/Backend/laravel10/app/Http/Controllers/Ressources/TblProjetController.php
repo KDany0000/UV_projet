@@ -36,7 +36,7 @@ class TblProjetController extends Controller
         $projets = TblProjet::with('user', 'niveau', 'categorie')
                             ->where('soumis', true) // Filtrer les projets soumis
                             ->get();
-    
+
         // Transformer les projets pour inclure les attributs souhaités
         $resultats = $projets->map(function($projet) {
             return [
@@ -55,11 +55,11 @@ class TblProjetController extends Controller
                 'updated_at' => $projet->updated_at,
             ];
         });
-    
+
         // Retourner les résultats en JSON
         return response()->json($resultats);
     }
-    
+
     /**
      * @OA\Post(
      *     path="/api/ressources/projets",
@@ -192,6 +192,12 @@ class TblProjetController extends Controller
         $projet->tbl_categorie_id = $request->tbl_categorie_id;
 
         if ($request->hasFile('image')) {
+            // Supprimer l'image précédente si elle existe
+            if ($projet->image) {
+                $this->fileUploadService->deleteFile($projet->image);
+            }
+
+            // Télécharger la nouvelle image
             $imageUrl = $this->fileUploadService->uploadFile($request->file('image'), 'public/images');
             $projet->image = $imageUrl;
         }
@@ -224,7 +230,14 @@ class TblProjetController extends Controller
      */
     public function destroy(string $id)
     {
-        TblProjet::where('id', $id)->delete();
+        // Supprimer les documents associés au projet
+        $projet = TblProjet::findOrFail($id);
+        $projet->documents()->delete();
+
+        // Supprimer le projet
+        $projet->delete();
+
         return response()->noContent();
     }
+
 }
