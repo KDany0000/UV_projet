@@ -174,6 +174,7 @@ Route::prefix('usecases')->group(function () {
         Route::get('/niveau/projets/{id}', 'ShowLevelProjects');
         Route::get('/user/documents/{id}', 'showUserDocuments');
         Route::get('/user/projets/{id}', 'showUserProjects');
+        Route::get('/user/approved_projets/{id}', 'showUserApprovedProjects');
         Route::get('/count/', 'countProjectsByStatus');
         Route::get('/getprojectstype', 'getProjectTypes');
 

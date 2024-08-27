@@ -179,6 +179,36 @@ class ListingController extends Controller
     return response()->json($formattedProjets);
 }
 
+public function showUserApprovedProjects($id)
+{
+    // Récupérer l'utilisateur par son ID
+    $user = User::findOrFail($id);
+
+    // Récupérer les projets associés à cet utilisateur avec leurs niveaux et catégories
+    $projets = $user->projets()->where('status','Approved')->with(['niveau:id,code_niv', 'categorie:id,nom_cat'])->get();
+
+    // Formater les projets pour inclure uniquement les noms des niveaux et catégories
+    $formattedProjets = $projets->map(function ($projet) {
+        return [
+                'id'=>$projet->id,
+                'user_id'=>$projet->user->id,
+               'titre' => $projet->titre_projet,
+                'description' => $projet->descript_projet,
+                'type' => $projet->type,
+                'views' => $projet->views,
+                'image' => $projet->image,
+                'status' => $projet->status,
+                'niveau' => $projet->niveau->code_niv,
+                'categorie' => $projet->categorie->nom_cat,
+                'nom_utilisateur' =>$projet->user->nom_user,
+                'created_at' => $projet->created_at,
+        ];
+    });
+
+    // Retourner les projets formatés
+    return response()->json($formattedProjets);
+}
+
 
 
     /**
@@ -225,16 +255,16 @@ class ListingController extends Controller
                                     ->where('soumis', true)
                                     ->groupBy('status')
                                     ->get();
-    
+
         // Transformer les résultats pour inclure les statuts et les comptes correspondants
         $resultats = $projectCounts->mapWithKeys(function($project) {
             return [$project->status => $project->total];
         });
-    
+
         // Retourner les résultats sous forme de tableau
         return response()->json([$resultats]);
     }
-    
+
 
 public function getProjectTypes()
 {

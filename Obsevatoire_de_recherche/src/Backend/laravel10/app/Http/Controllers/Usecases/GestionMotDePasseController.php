@@ -144,6 +144,7 @@ class GestionMotDePasseController extends Controller
      *     )
      * )
      */
+    
     public function resetPassword(Request $request)
     {
         $request->validate([
